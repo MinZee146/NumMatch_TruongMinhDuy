@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardController : MonoBehaviour
+public class BoardController : Singleton<BoardController>
 {
     [SerializeField] private GameObject _tilePrefab;
     [SerializeField] private Transform _tilesContainer;
     
     private List<Tile> _tileList = new();
+    private Tile _currentSeletedTile;
     private int _currentNumberedTiles;
     
     private void Start()
@@ -34,5 +35,11 @@ public class BoardController : MonoBehaviour
         }
         
         _currentNumberedTiles += tilesCount;
+    }
+
+    public void SetCurrentSeletedTile(Tile tile)
+    {
+        _currentSeletedTile?.UpdateSelector();
+        _currentSeletedTile = tile;
     }
 }

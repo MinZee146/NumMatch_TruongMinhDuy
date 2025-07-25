@@ -21,10 +21,12 @@ public class Tile : MonoBehaviour
         _button.onClick.AddListener(UpdateSelector);
     }
 
-    private void UpdateSelector()
+    public void UpdateSelector()
     {
         if (!_isSelected)
         {
+            BoardController.Instance.SetCurrentSeletedTile(this);
+            
             _selector.transform.DOScale(1f, 0.2f);
             _isSelected = true;
         }
