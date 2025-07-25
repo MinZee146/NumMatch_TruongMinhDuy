@@ -9,6 +9,7 @@ public class BoardController : Singleton<BoardController>
     [SerializeField] private ScrollRect _scrollRect;
     
     private List<Tile> _tileList = new();
+
     private Tile _currentSeletedTile;
     private int _currentNumberedTiles;
     
@@ -16,7 +17,8 @@ public class BoardController : Singleton<BoardController>
     {
         //Generate 10 rows to begin with
         GenerateBoard(10 * 9);
-        LoadInitialData(GetComponent<StageGenerator>().GenerateStage(1));
+        LoadData(9 * 3);
+        // LoadInitialData(GetComponent<StageGenerator>().GenerateStage(1));
     }
 
     private void GenerateBoard(int rows)
@@ -33,7 +35,7 @@ public class BoardController : Singleton<BoardController>
     {
         for (var i = _currentNumberedTiles; i < tilesCount + _currentNumberedTiles; i++)
         {
-            _tileList[i].LoadData(4);
+            _tileList[i].LoadData(4, i);
         }
         
         _currentNumberedTiles += tilesCount;
@@ -43,7 +45,7 @@ public class BoardController : Singleton<BoardController>
     {
         for (var i = 0; i < 27; i++)
         {
-            _tileList[i].LoadData(board[i]);
+            _tileList[i].LoadData(board[i], i);
         }
         
         _currentNumberedTiles = 27;
@@ -56,8 +58,20 @@ public class BoardController : Singleton<BoardController>
             _currentSeletedTile.UpdateSelector(false);
             return;
         }
-        
-        _currentSeletedTile?.UpdateSelector(false);
+
+        if (_currentSeletedTile != null)
+        {
+            _currentSeletedTile.UpdateSelector(false);
+            
+            if ( _currentSeletedTile.CanMatch(tile.Index, tile.Number))
+            {
+                _currentSeletedTile.Disable();
+                tile.Disable();
+
+                _currentSeletedTile = null;
+                return;
+            }
+        }
         
         _currentSeletedTile = tile;
         _currentSeletedTile.UpdateSelector(true);

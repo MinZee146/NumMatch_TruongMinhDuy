@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
@@ -12,7 +13,7 @@ public class StageGenerator : MonoBehaviour
 
     public List<int> GenerateStage(int stage)
     {
-        List<int> board = new();
+        var board = new List<int>();
         return board;
     }
 }
