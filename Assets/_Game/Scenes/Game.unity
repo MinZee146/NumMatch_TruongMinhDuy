@@ -966,6 +966,7 @@ GameObject:
   - component: {fileID: 914774795}
   - component: {fileID: 914774796}
   - component: {fileID: 914774797}
+  - component: {fileID: 914774798}
   m_Layer: 5
   m_Name: Board
   m_TagString: Untagged
@@ -1060,6 +1061,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tilePrefab: {fileID: 3805972551842002873, guid: 4150acba66cc85b4fbcb91a81ba00fde, type: 3}
   _tilesContainer: {fileID: 810420639}
+  _scrollRect: {fileID: 914774797}
 --- !u!114 &914774797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1067,7 +1069,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 914774791}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
   m_Name: 
@@ -1077,7 +1079,7 @@ MonoBehaviour:
   m_Vertical: 1
   m_MovementType: 2
   m_Elasticity: 0.1
-  m_Inertia: 1
+  m_Inertia: 0
   m_DecelerationRate: 0.135
   m_ScrollSensitivity: 1
   m_Viewport: {fileID: 0}
@@ -1090,6 +1092,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &914774798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914774791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bde9f8d0e7ddc8489d218e5dff3cf46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &961150846
 GameObject:
   m_ObjectHideFlags: 0

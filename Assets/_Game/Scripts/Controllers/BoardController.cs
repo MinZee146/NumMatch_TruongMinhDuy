@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BoardController : Singleton<BoardController>
 {
     [SerializeField] private GameObject _tilePrefab;
     [SerializeField] private Transform _tilesContainer;
+    [SerializeField] private ScrollRect _scrollRect;
     
     private List<Tile> _tileList = new();
     private Tile _currentSeletedTile;
@@ -12,9 +14,9 @@ public class BoardController : Singleton<BoardController>
     
     private void Start()
     {
-        //Generate 12 rows to begin with
-        GenerateBoard(12 * 9);
-        LoadData(9 * 3);
+        //Generate 10 rows to begin with
+        GenerateBoard(10 * 9);
+        LoadInitialData(GetComponent<StageGenerator>().GenerateStage(1));
     }
 
     private void GenerateBoard(int rows)
@@ -35,6 +37,16 @@ public class BoardController : Singleton<BoardController>
         }
         
         _currentNumberedTiles += tilesCount;
+    }
+
+    private void LoadInitialData(List<int> board)
+    {
+        for (var i = 0; i < 27; i++)
+        {
+            _tileList[i].LoadData(board[i]);
+        }
+        
+        _currentNumberedTiles = 27;
     }
 
     public void UpdateCurrentSeletedTile(Tile tile)
