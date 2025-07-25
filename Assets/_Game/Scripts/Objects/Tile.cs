@@ -17,7 +17,6 @@ public class Tile : MonoBehaviour
         _number.text = number.ToString();
 
         _button.interactable = true;
-        _button.onClick.RemoveAllListeners();
         _button.onClick.AddListener(UpdateSelector);
     }
 
@@ -25,21 +24,21 @@ public class Tile : MonoBehaviour
     {
         if (!_isSelected)
         {
+            _isSelected = true;
             BoardController.Instance.SetCurrentSeletedTile(this);
             
             _selector.transform.DOScale(1f, 0.2f);
-            _isSelected = true;
         }
         else
         {
-            var image = _selector.GetComponent<Image>();
+            _isSelected = false;
             
+            var image = _selector.GetComponent<Image>();
             image.DOFade(0f, 0.2f)
                 .OnComplete(() =>
             {
                 _selector.transform.localScale = Vector3.zero;
                 image.DOFade(1f, 0f);
-                _isSelected = false;
             });
         }
     }

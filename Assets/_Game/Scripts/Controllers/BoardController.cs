@@ -27,7 +27,7 @@ public class BoardController : Singleton<BoardController>
     }
 
     //Load data into the next *tilesCount tiles
-    private void LoadData(int tilesCount)
+    public void LoadData(int tilesCount)
     {
         for (var i = _currentNumberedTiles; i < tilesCount + _currentNumberedTiles; i++)
         {
@@ -39,6 +39,8 @@ public class BoardController : Singleton<BoardController>
 
     public void SetCurrentSeletedTile(Tile tile)
     {
+        if (_currentSeletedTile == tile) return;
+        
         _currentSeletedTile?.UpdateSelector();
         _currentSeletedTile = tile;
     }
