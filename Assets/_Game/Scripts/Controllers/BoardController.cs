@@ -37,11 +37,17 @@ public class BoardController : Singleton<BoardController>
         _currentNumberedTiles += tilesCount;
     }
 
-    public void SetCurrentSeletedTile(Tile tile)
+    public void UpdateCurrentSeletedTile(Tile tile)
     {
-        if (_currentSeletedTile == tile) return;
+        if (_currentSeletedTile == tile)
+        {
+            _currentSeletedTile.UpdateSelector(false);
+            return;
+        }
         
-        _currentSeletedTile?.UpdateSelector();
+        _currentSeletedTile?.UpdateSelector(false);
+        
         _currentSeletedTile = tile;
+        _currentSeletedTile.UpdateSelector(true);
     }
 }

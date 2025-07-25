@@ -10,29 +10,22 @@ public class Tile : MonoBehaviour
     [SerializeField] private Color _normalTextColor, _disabledTextColor;
     [SerializeField] private Button _button;
     
-    private bool _isSelected;
-    
     public void LoadData(int number)
     {
         _number.text = number.ToString();
 
         _button.interactable = true;
-        _button.onClick.AddListener(UpdateSelector);
+        _button.onClick.AddListener(() => BoardController.Instance.UpdateCurrentSeletedTile(this));
     }
 
-    public void UpdateSelector()
+    public void UpdateSelector(bool isSelected)
     {
-        if (!_isSelected)
+        if (isSelected)
         {
-            _isSelected = true;
-            BoardController.Instance.SetCurrentSeletedTile(this);
-            
             _selector.transform.DOScale(1f, 0.2f);
         }
         else
         {
-            _isSelected = false;
-            
             var image = _selector.GetComponent<Image>();
             image.DOFade(0f, 0.2f)
                 .OnComplete(() =>
