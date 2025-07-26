@@ -59,6 +59,7 @@ public class Tile : MonoBehaviour
 
     public void Clear()
     {
+        Number = 0;
         _numberText.text = "";
         _button.interactable = false;
     }

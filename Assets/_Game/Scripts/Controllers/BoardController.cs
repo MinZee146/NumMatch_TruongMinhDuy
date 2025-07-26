@@ -14,6 +14,7 @@ public class BoardController : Singleton<BoardController>
 
     private Tile _currentSelectedTile;
     private int _currentNumberedTiles;
+    private int _totalRows;
     private const int Cols = 9;
     
     private void Start()
@@ -23,9 +24,9 @@ public class BoardController : Singleton<BoardController>
         LoadInitialData(GetComponent<StageGenerator>().GenerateStage(1));
     }
 
-    private void GenerateBoard(int rows)
+    private void GenerateBoard(int tiles)
     {
-        for (var i = 0; i < rows; i++)
+        for (var i = 0; i < tiles; i++)
         {
             var tile = Instantiate(_tilePrefab, _tilesContainer);
             _tileList.Add(tile.GetComponent<Tile>());
@@ -63,6 +64,7 @@ public class BoardController : Singleton<BoardController>
         }
 
         _currentNumberedTiles += numbersToCopy.Count;
+        _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
     }
 
 
@@ -74,6 +76,7 @@ public class BoardController : Singleton<BoardController>
         }
         
         _currentNumberedTiles = 27;
+        _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
     }
     
     //Update selected tile UI, clear rows if empty
@@ -107,14 +110,10 @@ public class BoardController : Singleton<BoardController>
     
     private void CheckAndCollapseEmptyRows()
     {
-        var totalRows = _currentNumberedTiles / Cols;
-        var maxChecks = totalRows;
-
-        for (var row = 0; row < totalRows && maxChecks > 0; row++, maxChecks--)
+        for (var row = 0; row < _totalRows; row++)
         {
             if (!IsRowEmpty(row)) continue;
             CollapseRowsAbove(row);
-            row--;
         }
     }
 
@@ -132,9 +131,7 @@ public class BoardController : Singleton<BoardController>
 
     private void CollapseRowsAbove(int emptyRow)
     {
-        var totalRows = _currentNumberedTiles / Cols;
-
-        for (var row = emptyRow + 1; row < totalRows; row++)
+        for (var row = emptyRow + 1; row < _totalRows; row++)
         {
             for (var col = 0; col < Cols; col++)
             {
@@ -148,7 +145,7 @@ public class BoardController : Singleton<BoardController>
             }
         }
 
-        var lastRowStart = (totalRows - 1) * Cols;
+        var lastRowStart = (_totalRows - 1) * Cols;
         
         for (var col = 0; col < Cols; col++)
         {
@@ -156,5 +153,18 @@ public class BoardController : Singleton<BoardController>
         }
         
         _currentNumberedTiles -= Cols;
+        _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
+    }
+
+    public void Why()
+    {
+        Debug.Log("Current numbered tiles:" + _currentNumberedTiles + " total rows:" + _totalRows);
+        var count = 0;
+        foreach (var tile in _tileList)
+        {
+            if (tile.IsDisabled)
+                count++;
+        }
+        Debug.Log("Total disabled:" + count);
     }
 }
