@@ -20,8 +20,7 @@ public class BoardController : Singleton<BoardController>
     {
         //Generate 10 rows to begin with
         GenerateBoard(10 * 9);
-        LoadData(9 * 3);
-        // LoadInitialData(GetComponent<StageGenerator>().GenerateStage(1));
+        LoadInitialData(GetComponent<StageGenerator>().GenerateStage(1));
     }
 
     private void GenerateBoard(int rows)
@@ -31,17 +30,6 @@ public class BoardController : Singleton<BoardController>
             var tile = Instantiate(_tilePrefab, _tilesContainer);
             _tileList.Add(tile.GetComponent<Tile>());
         }
-    }
-
-    //Load data into the next *tilesCount tiles
-    public void LoadData(int tilesCount)
-    {
-        for (var i = _currentNumberedTiles; i < tilesCount + _currentNumberedTiles; i++)
-        {
-            _tileList[i].LoadData(4, i);
-        }
-        
-        _currentNumberedTiles += tilesCount;
     }
 
     public void LoadMoreTiles()

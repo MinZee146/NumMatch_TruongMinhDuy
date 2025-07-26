@@ -13,6 +13,12 @@ public class StageGenerator : MonoBehaviour
     public List<int> GenerateStage(int stage)
     {
         var board = new List<int>();
+        
+        for (var i = 0; i < 27; i++)
+        {
+            board.Add(5);
+        }
+
         return board;
     }
 }
