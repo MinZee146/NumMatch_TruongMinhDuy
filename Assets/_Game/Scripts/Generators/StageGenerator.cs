@@ -65,6 +65,7 @@ public class StageGenerator : MonoBehaviour
 
         for (var i = 0; i < board.Length; i++)
         {
+            //if this tile already matched with sth else, continue
             if (matched[i]) continue;
 
             for (var j = i + 1; j < board.Length; j++)
