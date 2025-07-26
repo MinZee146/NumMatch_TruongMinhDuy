@@ -114,6 +114,7 @@ public class BoardController : Singleton<BoardController>
         {
             if (!IsRowEmpty(row)) continue;
             CollapseRowsAbove(row);
+            row--;
         }
     }
 
