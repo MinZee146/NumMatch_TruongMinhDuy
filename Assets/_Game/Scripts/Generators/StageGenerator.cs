@@ -83,39 +83,14 @@ public class StageGenerator : MonoBehaviour
 
         return count;
     }
-
+    
+    //i, j: tile's indexes
     private bool CanMatch(int[] board, int i, int j)
     {
         int a = board[i], b = board[j];
         if (!(a == b || a + b == 10)) return false;
         
-        //calculate each tile's coordinate
-        int r1 = i / Cols, c1 = i % Cols;
-        int r2 = j / Cols, c2 = j % Cols;
-        
-        //calculate distance between 2 tiles
-        int dr = r2 - r1, dc = c2 - c1;
-        
-        if (dr == 0 || dc == 0 || Math.Abs(dr) == Math.Abs(dc))
-        {
-            int step;
-            
-            //calculate step in 8 directions
-            if (dr == 0) step = dc > 0 ? 1 : -1;
-            else if (dc == 0) step = dr > 0 ? Cols : -Cols;
-            else if (dr == dc) step = dr > 0 ? Cols + 1 : -(Cols + 1);
-            else step = dr > 0 ? Cols - 1 : -(Cols - 1);
-
-            var current = i + step;
-            while (current != j)
-            {
-                if (board[current] != 0) return false;
-                current += step;
-            }
-
-            return true;
-        }
-
-        return false;
+        var diff = Math.Abs(i - j);
+        return diff is 1 or 9 or 10 or 8;
     }
 }

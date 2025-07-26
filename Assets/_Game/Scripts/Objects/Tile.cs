@@ -72,7 +72,7 @@ public class Tile : MonoBehaviour
 
         if (diff is 1 or 9 or 10 or 8)
             return true;
-        
+
         const int cols = 9;
         int row1 = Index / cols, col1 = Index % cols;
         int row2 = targetTileIndex / cols, col2 = targetTileIndex % cols;
@@ -85,23 +85,37 @@ public class Tile : MonoBehaviour
         // Vertical
         else if (col1 == col2)
             step = row2 > row1 ? cols : -cols;
-        // ↘ / ↖
+        // Diagonal ↘ / ↖
         else if (row2 - row1 == col2 - col1)
             step = row2 > row1 ? cols + 1 : -(cols + 1);
-        // ↙ / ↗
+        // Diagonal ↙ / ↗
         else if (row2 - row1 == -(col2 - col1))
             step = row2 > row1 ? cols - 1 : -(cols - 1);
         else
-            return false;
+            step = 0;
 
-        // Check for blocking tiles between
-        var current = Index + step;
-        while (current != targetTileIndex)
+        if (step != 0)
         {
-            if (!BoardController.Instance.TileList[current].IsDisabled)
-                return false;
+            var current = Index + step;
+            while (current != targetTileIndex)
+            {
+                if (!BoardController.Instance.TileList[current].IsDisabled)
+                    return false;
 
-            current += step;
+                current += step;
+            }
+
+            return true;
+        }
+        
+        //Special case: return true if nothing blocks in array
+        var start = Mathf.Min(Index, targetTileIndex) + 1;
+        var end = Mathf.Max(Index, targetTileIndex);
+
+        for (var i = start; i < end; i++)
+        {
+            if (!BoardController.Instance.TileList[i].IsDisabled)
+                return false;
         }
 
         return true;
