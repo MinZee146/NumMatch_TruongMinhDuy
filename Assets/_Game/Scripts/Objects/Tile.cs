@@ -46,21 +46,53 @@ public class Tile : MonoBehaviour
 
     public void Disable()
     {
+        Number = 0;
+        
         _button.interactable = false;
         _numberText.color = _disabledTextColor;
     }
     
-    //Assume that both tiles are still active
+    //Assuming that both tiles are still active
     public bool CanMatch(int targetTileIndex, int targetTileNumber)
     {
         if (!(Number == targetTileNumber || Number + targetTileNumber == 10)) return false;
 
         var diff = Math.Abs(Index - targetTileIndex);
 
-        return diff switch
+        if (diff is 1 or 9 or 10 or 8)
+            return true;
+        
+        const int cols = 9;
+        int row1 = Index / cols, col1 = Index % cols;
+        int row2 = targetTileIndex / cols, col2 = targetTileIndex % cols;
+
+        int step;
+
+        // Horizontal
+        if (row1 == row2)
+            step = col2 > col1 ? 1 : -1;
+        // Vertical
+        else if (col1 == col2)
+            step = row2 > row1 ? cols : -cols;
+        // ↘ / ↖
+        else if (row2 - row1 == col2 - col1)
+            step = row2 > row1 ? cols + 1 : -(cols + 1);
+        // ↙ / ↗
+        else if (row2 - row1 == -(col2 - col1))
+            step = row2 > row1 ? cols - 1 : -(cols - 1);
+        else
+            return false;
+
+        // Check for blocking tiles between
+        var current = Index + step;
+        while (current != targetTileIndex)
         {
-            1 or 9 or 10 or 8 => true,
-            _ => false
-        };
+            if (BoardController.Instance.TileList[current].Number != 0)
+                return false;
+
+            current += step;
+        }
+
+        return true;
     }
 }

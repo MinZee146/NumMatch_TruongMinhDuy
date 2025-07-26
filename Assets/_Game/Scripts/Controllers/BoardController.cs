@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class BoardController : Singleton<BoardController>
 {
+    public IReadOnlyList<Tile> TileList => _tileList;
+    
     [SerializeField] private GameObject _tilePrefab;
     [SerializeField] private Transform _tilesContainer;
     [SerializeField] private ScrollRect _scrollRect;
