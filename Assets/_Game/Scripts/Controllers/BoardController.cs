@@ -155,16 +155,4 @@ public class BoardController : Singleton<BoardController>
         _currentNumberedTiles -= Cols;
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
     }
-
-    public void Why()
-    {
-        Debug.Log("Current numbered tiles:" + _currentNumberedTiles + " total rows:" + _totalRows);
-        var count = 0;
-        foreach (var tile in _tileList)
-        {
-            if (tile.IsDisabled)
-                count++;
-        }
-        Debug.Log("Total disabled:" + count);
-    }
 }
