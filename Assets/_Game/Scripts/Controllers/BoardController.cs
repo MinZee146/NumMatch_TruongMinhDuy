@@ -12,7 +12,7 @@ public class BoardController : Singleton<BoardController>
     
     private List<Tile> _tileList = new();
 
-    private Tile _currentSeletedTile;
+    private Tile _currentSelectedTile;
     private int _currentNumberedTiles;
     private const int Cols = 9;
     
@@ -44,6 +44,40 @@ public class BoardController : Singleton<BoardController>
         _currentNumberedTiles += tilesCount;
     }
 
+    public void LoadMoreTiles()
+    {
+        var numbersToCopy = new List<int>();
+
+        foreach (var tile in _tileList)
+        {
+            if (!tile.IsDisabled && tile.Number != 0)
+            {
+                numbersToCopy.Add(tile.Number);
+            }
+        }
+
+        // Check if more rows are needed
+        var neededCapacity = _currentNumberedTiles + numbersToCopy.Count;
+        while (_tileList.Count < neededCapacity)
+        {
+            // Instantiate more rows
+            for (var i = 0; i < Cols; i++)
+            {
+                var tile = Instantiate(_tilePrefab, _tilesContainer);
+                _tileList.Add(tile.GetComponent<Tile>());
+            }
+        }
+        
+        for (var i = 0; i < numbersToCopy.Count; i++)
+        {
+            var index = _currentNumberedTiles + i;
+            _tileList[index].LoadData(numbersToCopy[i], index);
+        }
+
+        _currentNumberedTiles += numbersToCopy.Count;
+    }
+
+
     private void LoadInitialData(List<int> board)
     {
         for (var i = 0; i < 27; i++)
@@ -57,30 +91,30 @@ public class BoardController : Singleton<BoardController>
     //Update selected tile UI, clear rows if empty
     public void UpdateCurrentSelectedTile(Tile tile)
     {
-        if (_currentSeletedTile == tile)
+        if (_currentSelectedTile == tile)
         {
-            _currentSeletedTile.UpdateSelector(false);
+            _currentSelectedTile.UpdateSelector(false);
             return;
         }
 
-        if (_currentSeletedTile != null)
+        if (_currentSelectedTile != null)
         {
-            _currentSeletedTile.UpdateSelector(false);
+            _currentSelectedTile.UpdateSelector(false);
             
-            if (_currentSeletedTile.CanMatch(tile.Index, tile.Number))
+            if (_currentSelectedTile.CanMatch(tile.Index, tile.Number))
             {
-                _currentSeletedTile.Disable();
+                _currentSelectedTile.Disable();
                 tile.Disable();
                 
                 CheckAndCollapseEmptyRows();
 
-                _currentSeletedTile = null;
+                _currentSelectedTile = null;
                 return;
             }
         }
         
-        _currentSeletedTile = tile;
-        _currentSeletedTile.UpdateSelector(true);
+        _currentSelectedTile = tile;
+        _currentSelectedTile.UpdateSelector(true);
     }
     
     private void CheckAndCollapseEmptyRows()
