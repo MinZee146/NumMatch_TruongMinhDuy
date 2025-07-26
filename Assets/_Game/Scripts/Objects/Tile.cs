@@ -21,10 +21,10 @@ public class Tile : MonoBehaviour
         Index = index;
         IsDisabled = isDisabled;
 
-        _numberText.text = number.ToString();
+        _numberText.text = number != 0 ? number.ToString() : "";
         _numberText.color = isDisabled ? _disabledTextColor : _normalTextColor;
         
-        _button.interactable = !isDisabled;
+        _button.interactable = !isDisabled && number != 0;
         
         _button.onClick.RemoveAllListeners();
         if (!isDisabled)
@@ -70,12 +70,15 @@ public class Tile : MonoBehaviour
 
         var diff = Math.Abs(Index - targetTileIndex);
 
-        if (diff is 1 or 9 or 10 or 8)
+        if (diff is 1 or 9 or 10)
             return true;
-
+        
         const int cols = 9;
         int row1 = Index / cols, col1 = Index % cols;
         int row2 = targetTileIndex / cols, col2 = targetTileIndex % cols;
+
+        //Edge case
+        if (diff == 8 && row1 != row2) return true;
 
         int step;
 

@@ -91,6 +91,14 @@ public class StageGenerator : MonoBehaviour
         if (!(a == b || a + b == 10)) return false;
         
         var diff = Math.Abs(i - j);
-        return diff is 1 or 9 or 10 or 8;
+        if (diff is 1 or 9 or 10)
+            return true;
+        
+        const int cols = 9;
+        var row1 = i / cols;
+        var row2 = j / cols;
+
+        //Edge case
+        return diff == 8 && row1 != row2;
     }
 }
