@@ -13,17 +13,22 @@ public class Tile : MonoBehaviour
 
     public int Index { get; private set; }
     public int Number { get; private set; }
+    public bool IsDisabled { get; private set; }
     
-    public void LoadData(int number, int index)
+    public void LoadData(int number, int index, bool isDisabled = false)
     {
         Number = number;
         Index = index;
+        IsDisabled = isDisabled;
 
         _numberText.text = number.ToString();
-        _numberText.color = _normalTextColor;
+        _numberText.color = isDisabled ? _disabledTextColor : _normalTextColor;
         
-        _button.interactable = true;
-        _button.onClick.AddListener(() => BoardController.Instance.UpdateCurrentSeletedTile(this));
+        _button.interactable = !isDisabled;
+        
+        _button.onClick.RemoveAllListeners();
+        if (!isDisabled)
+            _button.onClick.AddListener(() => BoardController.Instance.UpdateCurrentSelectedTile(this));
     }
 
     public void UpdateSelector(bool isSelected)
@@ -46,10 +51,16 @@ public class Tile : MonoBehaviour
 
     public void Disable()
     {
-        Number = 0;
+        IsDisabled = true;
         
         _button.interactable = false;
         _numberText.color = _disabledTextColor;
+    }
+
+    public void Clear()
+    {
+        _numberText.text = "";
+        _button.interactable = false;
     }
     
     //Assuming that both tiles are still active
@@ -87,7 +98,7 @@ public class Tile : MonoBehaviour
         var current = Index + step;
         while (current != targetTileIndex)
         {
-            if (BoardController.Instance.TileList[current].Number != 0)
+            if (!BoardController.Instance.TileList[current].IsDisabled)
                 return false;
 
             current += step;
