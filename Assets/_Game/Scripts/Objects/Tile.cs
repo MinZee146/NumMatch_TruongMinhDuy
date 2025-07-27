@@ -69,17 +69,10 @@ public class Tile : MonoBehaviour
     {
         if (!(Number == targetTileNumber || Number + targetTileNumber == 10)) return false;
 
-        var diff = Math.Abs(Index - targetTileIndex);
-
-        if (diff is 1 or 9 or 10)
-            return true;
-        
         const int cols = 9;
+        
         int row1 = Index / cols, col1 = Index % cols;
         int row2 = targetTileIndex / cols, col2 = targetTileIndex % cols;
-
-        //Edge case
-        if (diff == 8 && row1 != row2) return true;
 
         int step;
 
