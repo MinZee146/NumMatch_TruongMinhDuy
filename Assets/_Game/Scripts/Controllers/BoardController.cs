@@ -47,6 +47,13 @@ public class BoardController : Singleton<BoardController>
 
         // Check if more rows are needed
         var neededCapacity = _currentNumberedTiles + numbersToCopy.Count;
+        
+        // Enable scroll
+        if (_tileList.Count < neededCapacity)
+        {
+            _scrollRect.enabled = true;
+        }
+        
         while (_tileList.Count < neededCapacity)
         {
             // Instantiate more rows
@@ -62,7 +69,7 @@ public class BoardController : Singleton<BoardController>
             var index = _currentNumberedTiles + i;
             _tileList[index].LoadData(numbersToCopy[i], index);
         }
-
+        
         _currentNumberedTiles += numbersToCopy.Count;
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
     }
@@ -129,7 +136,8 @@ public class BoardController : Singleton<BoardController>
         
         return true;
     }
-
+    
+    //Collapse the empty row and replace it with the following row
     private void CollapseRows(int emptyRow)
     {
         for (var row = emptyRow + 1; row < _totalRows; row++)
