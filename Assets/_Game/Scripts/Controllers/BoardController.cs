@@ -113,7 +113,7 @@ public class BoardController : Singleton<BoardController>
         for (var row = 0; row < _totalRows; row++)
         {
             if (!IsRowEmpty(row)) continue;
-            CollapseRowsAbove(row);
+            CollapseRows(row);
             row--;
         }
     }
@@ -130,7 +130,7 @@ public class BoardController : Singleton<BoardController>
         return true;
     }
 
-    private void CollapseRowsAbove(int emptyRow)
+    private void CollapseRows(int emptyRow)
     {
         for (var row = emptyRow + 1; row < _totalRows; row++)
         {
@@ -138,6 +138,8 @@ public class BoardController : Singleton<BoardController>
             {
                 var fromIndex = row * Cols + col;
                 var toIndex = (row - 1) * Cols + col;
+
+                if (fromIndex >= _currentNumberedTiles) continue;
 
                 var fromTile = _tileList[fromIndex];
                 var toTile = _tileList[toIndex];
@@ -147,13 +149,14 @@ public class BoardController : Singleton<BoardController>
         }
 
         var lastRowStart = (_totalRows - 1) * Cols;
-        
-        for (var col = 0; col < Cols; col++)
+        var lastRowTileCount = _currentNumberedTiles - lastRowStart;
+
+        for (var col = 0; col < lastRowTileCount; col++)
         {
             _tileList[lastRowStart + col].Clear();
         }
-        
-        _currentNumberedTiles -= Cols;
+
+        _currentNumberedTiles -= lastRowTileCount;
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
     }
 }
