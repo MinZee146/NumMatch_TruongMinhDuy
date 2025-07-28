@@ -24,8 +24,6 @@ public class AudioManager : Singleton<AudioManager>
         var s = Array.Find(_sounds, s => s.Name == name);
         if (s != null)
         {
-            if (_audioSource.clip == s.Clip) return;
-            
             _audioSource.PlayOneShot(s.Clip);
         }
     }

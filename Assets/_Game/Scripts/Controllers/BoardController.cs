@@ -39,6 +39,8 @@ public class BoardController : Singleton<BoardController>
 
     public void LoadMoreTiles()
     {
+        AudioManager.Instance.PlaySfx("pop");
+        
         var numbersToCopy = new List<int>();
 
         foreach (var tile in _tileList)
@@ -53,7 +55,7 @@ public class BoardController : Singleton<BoardController>
         var neededCapacity = _currentNumberedTiles + numbersToCopy.Count;
         
         // Enable scroll
-        if (_tileList.Count < neededCapacity)
+        if (neededCapacity > 90)
         {
             _scrollRect.enabled = true;
         }
@@ -99,6 +101,8 @@ public class BoardController : Singleton<BoardController>
             _currentSelectedTile = null;
             return;
         }
+        
+        AudioManager.Instance.PlaySfx("choose_number");
 
         if (_currentSelectedTile != null)
         {
@@ -106,6 +110,8 @@ public class BoardController : Singleton<BoardController>
             
             if (_currentSelectedTile.CanMatch(tile.Index, tile.Number))
             {
+                AudioManager.Instance.PlaySfx("pair_clear");
+                
                 _currentSelectedTile.Disable();
                 tile.Disable();
                 
@@ -127,6 +133,8 @@ public class BoardController : Singleton<BoardController>
             if (!IsRowEmpty(row)) continue;
             CollapseRows(row);
             row--;
+            
+            AudioManager.Instance.PlaySfx("row_clear");
         }
         
         CheckForWinning();

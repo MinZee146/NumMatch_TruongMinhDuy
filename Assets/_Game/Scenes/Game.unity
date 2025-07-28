@@ -1619,7 +1619,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 914774796}
         m_TargetAssemblyTypeName: BoardController, Assembly-CSharp
-        m_MethodName: Debug
+        m_MethodName: DebugLog
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
