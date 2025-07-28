@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class BoardController : Singleton<BoardController>
     [SerializeField] private GameObject _tilePrefab;
     [SerializeField] private Transform _tilesContainer;
     [SerializeField] private ScrollRect _scrollRect;
+    [SerializeField] private TextMeshProUGUI _stageText;
     
     private List<Tile> _tileList = new();
 
@@ -16,12 +18,14 @@ public class BoardController : Singleton<BoardController>
     private int _currentNumberedTiles;
     private int _totalRows;
     private const int Cols = 9;
+
+    private int _currentStage = 1;
     
     private void Start()
     {
         //Generate 10 rows to begin with
         GenerateBoard(10 * 9);
-        LoadInitialData(GetComponent<StageGenerator>().GenerateStage(1));
+        LoadInitialData(GetComponent<StageGenerator>().GenerateStage(_currentStage));
     }
 
     private void GenerateBoard(int tiles)
@@ -124,6 +128,8 @@ public class BoardController : Singleton<BoardController>
             CollapseRows(row);
             row--;
         }
+        
+        CheckForWinning();
     }
 
     private bool IsRowEmpty(int row)
@@ -139,7 +145,7 @@ public class BoardController : Singleton<BoardController>
         return true;
     }
     
-    //Collapse the empty row and replace it with the following row
+    //Move all the rows below up one row and delete the last row
     private void CollapseRows(int emptyRow)
     {
         for (var row = emptyRow + 1; row < _totalRows; row++)
@@ -167,5 +173,20 @@ public class BoardController : Singleton<BoardController>
 
         _currentNumberedTiles -= lastRowTileCount;
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
+    }
+
+    private void CheckForWinning()
+    {
+        if (_totalRows == 0)
+        {
+            NextStage();
+        }
+    }
+
+    private void NextStage()
+    {
+        LoadInitialData(GetComponent<StageGenerator>().GenerateStage(++_currentStage));
+        
+        _stageText.text = $"Stage: {_currentStage}";
     }
 }
