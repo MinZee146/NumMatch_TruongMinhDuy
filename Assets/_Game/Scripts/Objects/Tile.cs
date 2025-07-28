@@ -64,6 +64,12 @@ public class Tile : MonoBehaviour
         _button.interactable = false;
     }
     
+    public void SlideAnimation()
+    {
+        _numberText.transform.localPosition = new Vector3(0f, -100f, 0f);
+        _numberText.transform.DOLocalMove(Vector3.zero, 0.2f);
+    }
+    
     //Assuming that both tiles are still active
     public bool CanMatch(int targetTileIndex, int targetTileNumber)
     {

@@ -153,6 +153,7 @@ public class BoardController : Singleton<BoardController>
                 var toTile = _tileList[toIndex];
 
                 toTile.LoadData(fromTile.Number, toIndex, fromTile.IsDisabled);
+                toTile.SlideAnimation();
             }
         }
 
