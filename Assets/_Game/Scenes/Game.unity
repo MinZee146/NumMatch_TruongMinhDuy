@@ -1062,6 +1062,7 @@ MonoBehaviour:
   _tilePrefab: {fileID: 3805972551842002873, guid: 4150acba66cc85b4fbcb91a81ba00fde, type: 3}
   _tilesContainer: {fileID: 810420639}
   _scrollRect: {fileID: 914774797}
+  _stageText: {fileID: 2025566366}
 --- !u!114 &914774797
 MonoBehaviour:
   m_ObjectHideFlags: 0
