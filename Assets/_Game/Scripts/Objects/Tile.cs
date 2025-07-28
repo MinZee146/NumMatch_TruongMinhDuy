@@ -31,6 +31,11 @@ public class Tile : MonoBehaviour
             _button.onClick.AddListener(() => BoardController.Instance.UpdateCurrentSelectedTile(this));
     }
 
+    public void UpdateIndexByRow(int rows = 1)
+    {
+        Index -= 9 * rows;
+    }
+
     public void UpdateSelector(bool isSelected)
     {
         if (isSelected)
@@ -57,13 +62,6 @@ public class Tile : MonoBehaviour
         _numberText.color = _disabledTextColor;
     }
 
-    public void Clear()
-    {
-        Number = 0;
-        _numberText.text = "";
-        _button.interactable = false;
-    }
-    
     //Assuming that both tiles are still active
     public bool CanMatch(int targetTileIndex, int targetTileNumber)
     {
