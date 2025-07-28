@@ -24,7 +24,7 @@ public class Tile : MonoBehaviour
         _numberText.text = number != 0 ? number.ToString() : "";
         _numberText.color = isDisabled ? _disabledTextColor : _normalTextColor;
         
-        _button.interactable = !isDisabled && number != 0;
+        _button.interactable = !isDisabled;
         
         _button.onClick.RemoveAllListeners();
         if (!isDisabled)

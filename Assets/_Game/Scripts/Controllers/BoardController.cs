@@ -126,6 +126,19 @@ public class BoardController : Singleton<BoardController>
         _currentSelectedTile.UpdateSelector(true);
     }
     
+    private bool IsRowEmpty(int row)
+    {
+        for (var col = 0; col < Cols; col++)
+        {
+            var index = row * Cols + col;
+            
+            if (!_tileList[index].IsDisabled && _tileList[index].Number != 0)
+                return false;
+        }
+        
+        return true;
+    }
+    
     private void CheckAndCollapseEmptyRows()
     {
         for (var row = 0; row < _totalRows; row++)
@@ -140,24 +153,14 @@ public class BoardController : Singleton<BoardController>
         CheckForWinning();
     }
 
-    private bool IsRowEmpty(int row)
-    {
-        for (var col = 0; col < Cols; col++)
-        {
-            var index = row * Cols + col;
-            
-            if (!_tileList[index].IsDisabled)
-                return false;
-        }
-        
-        return true;
-    }
     
     //Move all the rows below up one row and delete the last row
     private void CollapseRows(int emptyRow)
     {
         for (var row = emptyRow + 1; row < _totalRows; row++)
         {
+            if (emptyRow == _totalRows - 1) break;
+            
             for (var col = 0; col < Cols; col++)
             {
                 var fromIndex = row * Cols + col;
@@ -172,14 +175,18 @@ public class BoardController : Singleton<BoardController>
         }
 
         var lastRowStart = (_totalRows - 1) * Cols;
-        var lastRowTileCount = _currentNumberedTiles - lastRowStart;
-
-        for (var col = 0; col < lastRowTileCount; col++)
+        for (var col = 0; col < Cols; col++)
         {
             _tileList[lastRowStart + col].Clear();
         }
 
-        _currentNumberedTiles -= lastRowTileCount;
+        _currentNumberedTiles = 0;
+        foreach (var tile in _tileList)
+        {
+            if (tile.Number != 0)
+                _currentNumberedTiles++;
+        }
+        
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
     }
 
