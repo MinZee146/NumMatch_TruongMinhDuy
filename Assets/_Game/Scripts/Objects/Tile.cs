@@ -19,7 +19,7 @@ public class Tile : MonoBehaviour
     {
         Number = number;
         Index = index;
-        IsDisabled = isDisabled;
+        IsDisabled = number == 0 || isDisabled;
 
         _numberText.text = number != 0 ? number.ToString() : "";
         _numberText.color = isDisabled ? _disabledTextColor : _normalTextColor;
@@ -66,8 +66,10 @@ public class Tile : MonoBehaviour
     
     public void SlideAnimation()
     {
+        if (Number == 0) return;
+        
         _numberText.transform.localPosition = new Vector3(0f, -100f, 0f);
-        _numberText.transform.DOLocalMove(Vector3.zero, 0.2f);
+        _numberText.transform.DOLocalMove(Vector3.zero, 0.25f);
     }
     
     //Assuming that both tiles are still active

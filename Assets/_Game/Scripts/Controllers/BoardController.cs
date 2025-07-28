@@ -92,6 +92,7 @@ public class BoardController : Singleton<BoardController>
         if (_currentSelectedTile == tile)
         {
             _currentSelectedTile.UpdateSelector(false);
+            _currentSelectedTile = null;
             return;
         }
 
@@ -130,6 +131,7 @@ public class BoardController : Singleton<BoardController>
         for (var col = 0; col < Cols; col++)
         {
             var index = row * Cols + col;
+            
             if (!_tileList[index].IsDisabled)
                 return false;
         }
@@ -146,8 +148,6 @@ public class BoardController : Singleton<BoardController>
             {
                 var fromIndex = row * Cols + col;
                 var toIndex = (row - 1) * Cols + col;
-
-                if (fromIndex >= _currentNumberedTiles) continue;
 
                 var fromTile = _tileList[fromIndex];
                 var toTile = _tileList[toIndex];
