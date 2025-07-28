@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,14 +9,11 @@ public class BoardController : Singleton<BoardController>
     [SerializeField] private GameObject _tilePrefab;
     [SerializeField] private Transform _tilesContainer;
     [SerializeField] private ScrollRect _scrollRect;
-    [SerializeField] private TextMeshProUGUI _stageText;
-    [SerializeField] private GridLayoutGroup _gridLayoutGroup;
     
     private List<Tile> _tileList = new();
 
     private Tile _currentSelectedTile;
     private int _currentNumberedTiles;
-    private int _currentStage = 1;
     private int _totalRows;
     private const int Cols = 9;
     
@@ -25,7 +21,7 @@ public class BoardController : Singleton<BoardController>
     {
         //Generate 10 rows to begin with
         GenerateBoard(10 * 9);
-        LoadInitialData(GetComponent<StageGenerator>().GenerateStage(_currentStage));
+        LoadInitialData(GetComponent<StageGenerator>().GenerateStage(1));
     }
 
     private void GenerateBoard(int tiles)
@@ -96,7 +92,6 @@ public class BoardController : Singleton<BoardController>
         if (_currentSelectedTile == tile)
         {
             _currentSelectedTile.UpdateSelector(false);
-            _currentSelectedTile = null;
             return;
         }
 
@@ -128,8 +123,6 @@ public class BoardController : Singleton<BoardController>
             CollapseRows(row);
             row--;
         }
-        
-        CheckForWinning();
     }
 
     private bool IsRowEmpty(int row)
@@ -137,8 +130,7 @@ public class BoardController : Singleton<BoardController>
         for (var col = 0; col < Cols; col++)
         {
             var index = row * Cols + col;
-            var tile = _tileList[index];
-            if (!tile.IsDisabled && tile.Number != 0)
+            if (!_tileList[index].IsDisabled)
                 return false;
         }
         
@@ -148,60 +140,31 @@ public class BoardController : Singleton<BoardController>
     //Collapse the empty row and replace it with the following row
     private void CollapseRows(int emptyRow)
     {
-        _gridLayoutGroup.enabled = false;
-        
-        //Spawn 9 empty rows to replace the old ones
-        GenerateBoard(9);
-
-        var startIndex = emptyRow * Cols;
-
-        // Destroy empty rows
-        for (var i = 0; i < Cols; i++)
+        for (var row = emptyRow + 1; row < _totalRows; row++)
         {
-            var tile = _tileList[startIndex + i];
-            if (tile.Number != 0)
-                _currentNumberedTiles--;
-            
-            Destroy(_tileList[startIndex + i].gameObject);
-        }
-        _tileList.RemoveRange(startIndex, Cols);
-        
-        // Update index
-        for (var i = startIndex; i < startIndex + Cols; i++)
-        {
-            var tile = _tileList[i];
-            tile.UpdateIndexByRow();
+            for (var col = 0; col < Cols; col++)
+            {
+                var fromIndex = row * Cols + col;
+                var toIndex = (row - 1) * Cols + col;
+
+                if (fromIndex >= _currentNumberedTiles) continue;
+
+                var fromTile = _tileList[fromIndex];
+                var toTile = _tileList[toIndex];
+
+                toTile.LoadData(fromTile.Number, toIndex, fromTile.IsDisabled);
+            }
         }
 
-        // Update total rows
+        var lastRowStart = (_totalRows - 1) * Cols;
+        var lastRowTileCount = _currentNumberedTiles - lastRowStart;
+
+        for (var col = 0; col < lastRowTileCount; col++)
+        {
+            _tileList[lastRowStart + col].Clear();
+        }
+
+        _currentNumberedTiles -= lastRowTileCount;
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
-
-        _gridLayoutGroup.enabled = true;
-    }
-
-    private void CheckForWinning()
-    {
-        if (_totalRows == 0)
-        {
-            _currentNumberedTiles = 0;
-            _currentSelectedTile = null;
-
-            _currentStage++;
-            
-            _stageText.text = $"Stage: {_currentStage}";
-            
-            LoadInitialData(GetComponent<StageGenerator>().GenerateStage(_currentStage));
-        }
-    }
-    
-    //Debug only
-    public void DebugLog()
-    {
-        Debug.Log($"Current numbered tiles: {_currentNumberedTiles}, Current tile list size: {_tileList.Count}, Total rows: {_totalRows}, Current stage: {_currentStage}");
-    }
-
-    public void ShowCurrentIndex()
-    {
-        Debug.Log($"{_currentSelectedTile.Index}");
     }
 }

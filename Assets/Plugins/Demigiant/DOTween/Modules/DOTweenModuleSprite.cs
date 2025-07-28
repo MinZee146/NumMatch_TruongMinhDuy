@@ -21,7 +21,7 @@ namespace DG.Tweening
         /// <param name="endValue">The end value to reach</param><param name="duration">The duration of the tween</param>
         public static TweenerCore<Color, Color, ColorOptions> DOColor(this SpriteRenderer target, Color endValue, float duration)
         {
-            var t = DOTween.To(() => target.color, x => target.color = x, endValue, duration);
+            TweenerCore<Color, Color, ColorOptions> t = DOTween.To(() => target.color, x => target.color = x, endValue, duration);
             t.SetTarget(target);
             return t;
         }
@@ -31,7 +31,7 @@ namespace DG.Tweening
         /// <param name="endValue">The end value to reach</param><param name="duration">The duration of the tween</param>
         public static TweenerCore<Color, Color, ColorOptions> DOFade(this SpriteRenderer target, float endValue, float duration)
         {
-            var t = DOTween.ToAlpha(() => target.color, x => target.color = x, endValue, duration);
+            TweenerCore<Color, Color, ColorOptions> t = DOTween.ToAlpha(() => target.color, x => target.color = x, endValue, duration);
             t.SetTarget(target);
             return t;
         }
@@ -42,16 +42,16 @@ namespace DG.Tweening
         /// <param name="gradient">The gradient to use</param><param name="duration">The duration of the tween</param>
         public static Sequence DOGradientColor(this SpriteRenderer target, Gradient gradient, float duration)
         {
-            var s = DOTween.Sequence();
-            var colors = gradient.colorKeys;
-            var len = colors.Length;
-            for (var i = 0; i < len; ++i) {
-                var c = colors[i];
+            Sequence s = DOTween.Sequence();
+            GradientColorKey[] colors = gradient.colorKeys;
+            int len = colors.Length;
+            for (int i = 0; i < len; ++i) {
+                GradientColorKey c = colors[i];
                 if (i == 0 && c.time <= 0) {
                     target.color = c.color;
                     continue;
                 }
-                var colorDuration = i == len - 1
+                float colorDuration = i == len - 1
                     ? duration - s.Duration(false) // Verifies that total duration is correct
                     : duration * (i == 0 ? c.time : c.time - colors[i - 1].time);
                 s.Append(target.DOColor(c.color, colorDuration).SetEase(Ease.Linear));
@@ -74,9 +74,9 @@ namespace DG.Tweening
         public static Tweener DOBlendableColor(this SpriteRenderer target, Color endValue, float duration)
         {
             endValue = endValue - target.color;
-            var to = new Color(0, 0, 0, 0);
+            Color to = new Color(0, 0, 0, 0);
             return DOTween.To(() => to, x => {
-                    var diff = x - to;
+                    Color diff = x - to;
                     to = x;
                     target.color += diff;
                 }, endValue, duration)
