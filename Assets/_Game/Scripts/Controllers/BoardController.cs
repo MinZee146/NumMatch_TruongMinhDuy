@@ -175,11 +175,8 @@ public class BoardController : Singleton<BoardController>
         
         for (var row = clearedRows.Min(); row < oldTotalRows; row ++)
         {
-            var offset = 0;
-            if (row < _totalRows)
-            {
-                offset = clearedRows.Count(a => a < nonEmptyRows[row]);
-            }
+            var offset = row < _totalRows ? clearedRows.Count(cleared => cleared < nonEmptyRows[row]) : 0;
+            
             var miniSequence = DOTween.Sequence();
             
             for (var col = 0; col < Cols; col++)
