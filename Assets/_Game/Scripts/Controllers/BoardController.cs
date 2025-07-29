@@ -146,18 +146,25 @@ public class BoardController : Singleton<BoardController>
         var sequence = DOTween.Sequence();
         
         List<int> clearedRows = new();
-
+        List<int> nonEmptyRows = new();
+        
         for (var row = 0; row < _totalRows; row++)
         {
             if (IsRowEmpty(row))
             {
                 clearedRows.Add(row);
             }
+            else
+            {
+                nonEmptyRows.Add(row);
+            }
         }
 
         if (clearedRows.Count == 0) return;
 
         clearedRows.Sort((a, b) => b.CompareTo(a));
+        
+        var oldTotalRows = _totalRows;
 
         foreach (var row in clearedRows)
         {
@@ -166,15 +173,24 @@ public class BoardController : Singleton<BoardController>
             AudioManager.Instance.PlaySfx("row_clear");
         }
         
-        for (var row = clearedRows.Min(); row < _totalRows; row ++)
+        for (var row = clearedRows.Min(); row < oldTotalRows; row ++)
         {
+            var offset = 0;
+            if (row < _totalRows)
+            {
+                offset = clearedRows.Count(a => a < nonEmptyRows[row]);
+            }
             var miniSequence = DOTween.Sequence();
             
             for (var col = 0; col < Cols; col++)
             {
                 var tile = _tileList[row * Cols + col];
-                tile.SetUpClearAnimation(clearedRows.Count);
-        
+
+                if (row < _totalRows)
+                {
+                    tile.SetUpClearAnimation(offset);
+                }
+
                 if (clearedRows.Contains(row))
                 {
                     miniSequence.Append(tile.ClearAnimation());
@@ -186,7 +202,7 @@ public class BoardController : Singleton<BoardController>
         
         sequence.AppendInterval(1f);
         
-        for (var row = clearedRows.Min(); row < _totalRows; row++)
+        for (var row = clearedRows.Min(); row < oldTotalRows; row++)
         {
             for (var col = 0; col < Cols; col++)
             {
