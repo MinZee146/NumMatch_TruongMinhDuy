@@ -81,6 +81,11 @@ public class Tile : MonoBehaviour
     {
         return _numberText.transform.DOLocalMove(Vector3.zero, 0.25f);
     }
+
+    private Tween Jiggle()
+    {
+        return _numberText.transform.DOShakePosition(0.5f, 9f);
+    }
     
     //Assuming that both tiles are still active
     public bool CanMatch(int targetTileIndex, int targetTileNumber)
@@ -111,28 +116,40 @@ public class Tile : MonoBehaviour
 
         if (step != 0)
         {
+            var sequence = DOTween.Sequence();
+            var canMatch = true;
+            
             var current = Index + step;
             while (current != targetTileIndex)
             {
                 if (!BoardController.Instance.TileList[current].IsDisabled)
-                    return false;
+                {
+                    sequence.Join(BoardController.Instance.TileList[current].Jiggle());
+                    canMatch = false;
+                }
 
                 current += step;
             }
 
-            return true;
+            return canMatch;
         }
         
         //Special case: return true if nothing blocks in array
         var start = Mathf.Min(Index, targetTileIndex) + 1;
         var end = Mathf.Max(Index, targetTileIndex);
+        
+        var sequence2 = DOTween.Sequence();
+        var canMatch2 = true;
 
         for (var i = start; i < end; i++)
         {
             if (!BoardController.Instance.TileList[i].IsDisabled)
-                return false;
+            {
+                sequence2.Join(BoardController.Instance.TileList[i].Jiggle());
+                canMatch2 = false;
+            }
         }
 
-        return true;
+        return canMatch2;
     }
 }

@@ -145,6 +145,7 @@ public class BoardController : Singleton<BoardController>
     {
         var sequence = DOTween.Sequence();
         
+        // clearedRows store cleared rows indexes and nonEmptyRows store the rest
         List<int> clearedRows = new();
         List<int> nonEmptyRows = new();
         
@@ -161,18 +162,18 @@ public class BoardController : Singleton<BoardController>
         }
 
         if (clearedRows.Count == 0) return;
-
+        
         clearedRows.Sort((a, b) => b.CompareTo(a));
         
         var oldTotalRows = _totalRows;
 
         foreach (var row in clearedRows)
         {
-            Debug.Log(row);
             CollapseRows(row);
             AudioManager.Instance.PlaySfx("row_clear");
         }
         
+        //Calculate how much offset needed for each row, then animate
         for (var row = clearedRows.Min(); row < oldTotalRows; row ++)
         {
             var offset = row < _totalRows ? clearedRows.Count(cleared => cleared < nonEmptyRows[row]) : 0;
