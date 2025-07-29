@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,7 +27,7 @@ public class BoardController : Singleton<BoardController>
     {
         //Generate 10 rows to begin with
         GenerateBoard(10 * 9);
-        LoadInitialData(GetComponent<StageGenerator>().GenerateStage(_currentStage));
+        LoadInitialData(GetComponent<StageGenerator>().Test());
     }
 
     private void GenerateBoard(int tiles)
@@ -141,25 +143,67 @@ public class BoardController : Singleton<BoardController>
     
     private void CheckAndCollapseEmptyRows()
     {
+        var sequence = DOTween.Sequence();
+        
+        List<int> clearedRows = new();
+
         for (var row = 0; row < _totalRows; row++)
         {
-            if (!IsRowEmpty(row)) continue;
+            if (IsRowEmpty(row))
+            {
+                clearedRows.Add(row);
+            }
+        }
+
+        if (clearedRows.Count == 0) return;
+
+        clearedRows.Sort((a, b) => b.CompareTo(a));
+
+        foreach (var row in clearedRows)
+        {
+            Debug.Log(row);
             CollapseRows(row);
-            row--;
-            
             AudioManager.Instance.PlaySfx("row_clear");
         }
         
-        CheckForWinning();
+        for (var row = clearedRows.Min(); row < _totalRows; row ++)
+        {
+            var miniSequence = DOTween.Sequence();
+            
+            for (var col = 0; col < Cols; col++)
+            {
+                var tile = _tileList[row * Cols + col];
+                tile.SetUpClearAnimation(clearedRows.Count);
+        
+                if (clearedRows.Contains(row))
+                {
+                    miniSequence.Append(tile.ClearAnimation());
+                }
+            }
+            
+            sequence.Join(miniSequence);
+        }
+        
+        sequence.AppendInterval(1f);
+        
+        for (var row = clearedRows.Min(); row < _totalRows; row++)
+        {
+            for (var col = 0; col < Cols; col++)
+            {
+                var tile = _tileList[row * Cols + col];
+                sequence.Join(tile.SlideAnimation());
+            }
+        }
+        
+        sequence.AppendCallback(CheckForWinning);
     }
 
-    
     //Move all the rows below up one row and delete the last row
     private void CollapseRows(int emptyRow)
     {
         for (var col = 0; col < Cols; col++)
         {
-            var tile = _tileList[emptyRow *Cols + col];
+            var tile = _tileList[emptyRow * Cols + col];
             if (tile.IsDisabled && tile.Number != 0)
             {
                 _currentNumberedTiles--;
@@ -179,7 +223,6 @@ public class BoardController : Singleton<BoardController>
                 var toTile = _tileList[toIndex];
 
                 toTile.LoadData(fromTile.Number, toIndex, fromTile.IsDisabled);
-                toTile.SlideAnimation();
             }
         }
 
@@ -205,5 +248,10 @@ public class BoardController : Singleton<BoardController>
         LoadInitialData(GetComponent<StageGenerator>().GenerateStage(++_currentStage));
         
         _stageText.text = $"Stage: {_currentStage}";
+    }
+
+    public void DebugLog()
+    {
+        Debug.Log(_currentNumberedTiles);
     }
 }

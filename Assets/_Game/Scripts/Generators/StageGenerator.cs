@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = System.Random;
 
@@ -15,7 +16,7 @@ public class StageGenerator : MonoBehaviour
     {
         var requiredPairs = stage switch
         {
-            1 => 3,
+            1 => 8,
             2 => 2,
             _ => 1
         };
@@ -47,6 +48,11 @@ public class StageGenerator : MonoBehaviour
                 return new List<int>(board);
             }
         }
+    }
+
+    public List<int> Test()
+    {
+        return Enumerable.Repeat(4, 27).ToList();
     }
 
     private void Shuffle(List<int> list)

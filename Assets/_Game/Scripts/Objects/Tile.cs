@@ -63,13 +63,23 @@ public class Tile : MonoBehaviour
         _numberText.text = "";
         _button.interactable = false;
     }
-    
-    public void SlideAnimation()
+
+    public Tween ClearAnimation()
     {
-        if (Number == 0) return;
-        
-        _numberText.transform.localPosition = new Vector3(0f, -100f, 0f);
-        _numberText.transform.DOLocalMove(Vector3.zero, 0.25f);
+        return _selector.transform.DOScale(1f, 0.1f).OnComplete(() =>
+        {
+            _selector.transform.DOScale(0f, 0.1f);
+        });
+    }
+
+    public void SetUpClearAnimation(int row)
+    {
+        _numberText.transform.localPosition = new Vector3(0f, -100f * row, 0f);
+    }
+    
+    public Tween SlideAnimation()
+    {
+        return _numberText.transform.DOLocalMove(Vector3.zero, 0.25f);
     }
     
     //Assuming that both tiles are still active
