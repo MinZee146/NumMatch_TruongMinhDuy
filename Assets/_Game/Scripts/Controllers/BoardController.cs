@@ -157,6 +157,15 @@ public class BoardController : Singleton<BoardController>
     //Move all the rows below up one row and delete the last row
     private void CollapseRows(int emptyRow)
     {
+        for (var col = 0; col < Cols; col++)
+        {
+            var tile = _tileList[emptyRow *Cols + col];
+            if (tile.IsDisabled && tile.Number != 0)
+            {
+                _currentNumberedTiles--;
+            }
+        }
+        
         for (var row = emptyRow + 1; row < _totalRows; row++)
         {
             if (emptyRow == _totalRows - 1) break;
