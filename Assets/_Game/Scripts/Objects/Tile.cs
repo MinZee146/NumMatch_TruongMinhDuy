@@ -8,21 +8,21 @@ public class Tile : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _numberText;
     [SerializeField] private GameObject _selector;
-    [SerializeField] private Color _normalTextColor, _disabledTextColor;
+    [SerializeField] private Color _normalTextColor, _disabledTextColor, _fadeColor;
     [SerializeField] private Button _button;
 
     public int Index { get; private set; }
     public int Number { get; private set; }
     public bool IsDisabled { get; private set; }
     
-    public void LoadData(int number, int index, bool isDisabled = false)
+    public void LoadData(int number, int index, bool isDisabled = false, bool fade = false)
     {
         Number = number;
         Index = index;
         IsDisabled = number == 0 || isDisabled;
 
         _numberText.text = number != 0 ? number.ToString() : "";
-        _numberText.color = isDisabled ? _disabledTextColor : _normalTextColor;
+        _numberText.color = fade ? _fadeColor : isDisabled ? _disabledTextColor : _normalTextColor;
         
         _button.interactable = !isDisabled;
         
@@ -62,6 +62,16 @@ public class Tile : MonoBehaviour
         Number = 0;
         _numberText.text = "";
         _button.interactable = false;
+    }
+
+    public Sequence SpawnAnimation()
+    {
+        var seq = DOTween.Sequence();
+
+        seq.Join(ClearAnimation());
+        seq.Join(_numberText.DOColor(_normalTextColor, 0.1f).SetEase(Ease.InOutSine));
+        
+        return seq;
     }
 
     public Tween ClearAnimation()

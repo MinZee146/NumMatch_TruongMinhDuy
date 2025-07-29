@@ -34,6 +34,7 @@ public class BoardController : Singleton<BoardController>
         AudioManager.Instance.PlaySfx("pop");
         
         var numbersToCopy = new List<int>();
+        var sequence = DOTween.Sequence();
 
         foreach (var tile in _tileList)
         {
@@ -65,7 +66,8 @@ public class BoardController : Singleton<BoardController>
         for (var i = 0; i < numbersToCopy.Count; i++)
         {
             var index = _currentNumberedTiles + i;
-            _tileList[index].LoadData(numbersToCopy[i], index);
+            _tileList[index].LoadData(numbersToCopy[i], index, fade: true);
+            sequence.Append(_tileList[index].SpawnAnimation());
         }
         
         _currentNumberedTiles += numbersToCopy.Count;
