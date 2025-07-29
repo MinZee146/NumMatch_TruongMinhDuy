@@ -189,13 +189,6 @@ public class BoardController : Singleton<BoardController>
             _tileList[lastRowStart + col].Clear();
         }
 
-        _currentNumberedTiles = 0;
-        foreach (var tile in _tileList)
-        {
-            if (tile.Number != 0)
-                _currentNumberedTiles++;
-        }
-        
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
     }
 
