@@ -12,7 +12,6 @@ public class BoardController : Singleton<BoardController>
     [SerializeField] private GameObject _tilePrefab;
     [SerializeField] private Transform _tilesContainer;
     [SerializeField] private ScrollRect _scrollRect;
-    [SerializeField] private TextMeshProUGUI _stageText;
     
     private List<Tile> _tileList = new();
 
@@ -20,17 +19,8 @@ public class BoardController : Singleton<BoardController>
     private int _currentNumberedTiles;
     private int _totalRows;
     private const int Cols = 9;
-
-    private int _currentStage = 1;
     
-    private void Start()
-    {
-        //Generate 10 rows to begin with
-        GenerateBoard(10 * 9);
-        LoadInitialData(GetComponent<StageGenerator>().Test());
-    }
-
-    private void GenerateBoard(int tiles)
+    public void GenerateBoard(int tiles)
     {
         for (var i = 0; i < tiles; i++)
         {
@@ -83,7 +73,7 @@ public class BoardController : Singleton<BoardController>
     }
 
 
-    private void LoadInitialData(List<int> board)
+    public void LoadInitialData(List<int> board)
     {
         for (var i = 0; i < 27; i++)
         {
@@ -91,7 +81,7 @@ public class BoardController : Singleton<BoardController>
         }
         
         _currentNumberedTiles = 27;
-        _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
+        _totalRows = 3;
     }
     
     //Update selected tile UI, clear rows if empty
@@ -253,15 +243,8 @@ public class BoardController : Singleton<BoardController>
     {
         if (_totalRows == 0)
         {
-            NextStage();
+            GameManager.Instance.ProceedsToNextStage();
         }
-    }
-
-    private void NextStage()
-    {
-        LoadInitialData(GetComponent<StageGenerator>().GenerateStage(++_currentStage));
-        
-        _stageText.text = $"Stage: {_currentStage}";
     }
 
     public void DebugLog()

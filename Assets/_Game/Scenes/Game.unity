@@ -272,6 +272,65 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &109250353
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 109250356}
+  - component: {fileID: 109250355}
+  - component: {fileID: 109250354}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &109250354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109250353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bde9f8d0e7ddc8489d218e5dff3cf46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &109250355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109250353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7b246d6269aa7b41a4a91f42950aaa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stageText: {fileID: 2025566366}
+  _addTileCountText: {fileID: 1654612050}
+--- !u!4 &109250356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109250353}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 740, y: 1505, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &296086893
 GameObject:
   m_ObjectHideFlags: 0
@@ -698,9 +757,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 914774796}
-        m_TargetAssemblyTypeName: BoardController, Assembly-CSharp
-        m_MethodName: LoadMoreTiles
+      - m_Target: {fileID: 109250355}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: AddMoreTiles
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1116,7 +1175,6 @@ GameObject:
   - component: {fileID: 914774795}
   - component: {fileID: 914774796}
   - component: {fileID: 914774797}
-  - component: {fileID: 914774798}
   m_Layer: 5
   m_Name: Board
   m_TagString: Untagged
@@ -1212,7 +1270,6 @@ MonoBehaviour:
   _tilePrefab: {fileID: 3805972551842002873, guid: 4150acba66cc85b4fbcb91a81ba00fde, type: 3}
   _tilesContainer: {fileID: 810420639}
   _scrollRect: {fileID: 914774797}
-  _stageText: {fileID: 2025566366}
 --- !u!114 &914774797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1243,18 +1300,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &914774798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 914774791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bde9f8d0e7ddc8489d218e5dff3cf46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &961150846
 GameObject:
   m_ObjectHideFlags: 0
