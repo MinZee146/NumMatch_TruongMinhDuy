@@ -57,6 +57,16 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    private void ResetMissionsUI()
+    {
+        foreach (Transform obj in _gemsCollector.transform)
+        {
+            Destroy(obj.gameObject);
+        }
+        
+        _goals.Clear();
+    }
+
     public void UpdateProgress(GemType gemType)
     {
         var gemMission = _goals.Find(_ => _.gemType == gemType);
@@ -71,8 +81,9 @@ public class GameManager : Singleton<GameManager>
         _stageText.text = $"Stage: {CurrentStage}";
         CurrentAddTiles = AddMorePerStage;
         _addTileCountText.text = CurrentAddTiles.ToString();
-        BoardController.Instance.ClearBoard();
         
+        BoardController.Instance.ClearBoard();
+        ResetMissionsUI();
         GenerateGemMission();
         
         BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().GenerateStage(CurrentStage));
@@ -84,11 +95,8 @@ public class GameManager : Singleton<GameManager>
         {
             if (_lose.activeSelf)
             {
-                CurrentAddTiles = AddMorePerStage;
-                _addTileCountText.text = CurrentAddTiles.ToString();
-                
-                BoardController.Instance.ClearBoard();
-                BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().GenerateStage(CurrentStage));
+                CurrentStage--;
+                ProceedsToNextStage();
             }
                 
             _lose.SetActive(!_win.activeSelf);
