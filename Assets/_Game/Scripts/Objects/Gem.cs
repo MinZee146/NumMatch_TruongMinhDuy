@@ -1,6 +1,7 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public enum GemType
@@ -17,19 +18,19 @@ public class Gem : MonoBehaviour
     [SerializeField] private Sprite _purpleSprite, _orangeSprite, _pinkSprite;
     [SerializeField] private GameObject _selector;
     
-    private GemType _gemType;
+    public GemType GemType { get;  private set; }
 
     private void OnEnable()
     {
-        transform.DOScale(1f, 0.5f).SetEase(Ease.OutBounce);
+        transform.DOScale(1f, 1f).SetEase(Ease.OutBounce);
     }
 
     public void LoadData(int number, GemType gemType)
     {
         _numberText.text = number.ToString();
-        _gemType = gemType;
+        GemType = gemType;
 
-        _gemImage.sprite = _gemType switch
+        _gemImage.sprite = GemType switch
         {
             GemType.Pink => _pinkSprite,
             GemType.Orange => _orangeSprite,
@@ -54,6 +55,7 @@ public class Gem : MonoBehaviour
         seq.AppendCallback(() =>
         {
             Destroy(gameObject);
+            GameManager.Instance.UpdateProgress(GemType);
         });
     }
 }

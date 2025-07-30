@@ -11,14 +11,13 @@ public class Tile : MonoBehaviour
     [SerializeField] private Color _normalTextColor, _disabledTextColor, _fadeColor;
     [SerializeField] private Button _button;
     [SerializeField] private GameObject _gemPrefab;
-    
-    private Gem _gem;
 
+    public Gem Gem { get; private set; }
     public int Index { get; private set; }
     public int Number { get; private set; }
     public bool IsDisabled { get; private set; }
     
-    public void LoadData(int number, int index, bool isDisabled = false, bool fade = false, bool hasGem = false, GemType gemType = GemType.Orange)
+    public void LoadData(int number, int index, bool isDisabled = false, bool fade = false, Gem gem = null)
     {
         Number = number;
         Index = index;
@@ -34,18 +33,37 @@ public class Tile : MonoBehaviour
         if (!isDisabled)
             _button.onClick.AddListener(() => BoardController.Instance.UpdateCurrentSelectedTile(this));
 
-        if (hasGem)
+        Gem = null;
+        if (gem != null)
         {
-            _gem = Instantiate(_gemPrefab, transform).GetComponent<Gem>();
-            _gem.LoadData(Number, gemType);
+            SetGem(gem.GemType, gem);
         }
+    }
+
+    public void SetGem(GemType gemType, Gem gem = null)
+    {
+        if (gem != null)
+        {
+            Gem = gem;
+            Gem.transform.parent = transform;
+            Gem.transform.localPosition = Vector3.zero;
+            return;
+        }
+        
+        Gem = Instantiate(_gemPrefab, transform).GetComponent<Gem>();
+        Gem.LoadData(Number, gemType);
+    }
+
+    public void ClearGem()
+    {
+        Gem = null;
     }
 
     public void UpdateSelector(bool isSelected)
     {
-        if (_gem != null)
+        if (Gem != null)
         {
-            _gem.UpdateSelector(isSelected);
+            Gem.UpdateSelector(isSelected);
         }
         
         if (isSelected)
@@ -66,10 +84,10 @@ public class Tile : MonoBehaviour
 
     public void Disable()
     {
-        if (_gem != null)
+        if (Gem != null)
         {
-            _gem.CollectAnimation(GameObject.FindWithTag("GemCollector").transform);
-            _gem = null;
+            Gem.CollectAnimation(GameManager.Instance.GemCollector);
+            Gem = null;
         }
         
         IsDisabled = true;
@@ -106,11 +124,23 @@ public class Tile : MonoBehaviour
     public void SetUpClearAnimation(int row)
     {
         _numberText.transform.localPosition = new Vector3(0f, -100f * row, 0f);
+        
+        if (Gem != null)
+            Gem.transform.localPosition = new Vector3(0f, -100f * row, 0f);
     }
     
     public Tween SlideAnimation()
     {
-        return _numberText.transform.DOLocalMove(Vector3.zero, 0.25f);
+        var sequence = DOTween.Sequence();
+
+        sequence.Join(_numberText.transform.DOLocalMove(Vector3.zero, 0.25f));
+
+        if (Gem != null)
+        {
+            sequence.Join(Gem.transform.DOLocalMove(Vector3.zero, 0.25f));
+        }
+
+        return sequence;
     }
 
     private Tween Jiggle()
@@ -119,7 +149,7 @@ public class Tile : MonoBehaviour
     }
     
     //Assuming that both tiles are still active
-    public bool CanMatch(int targetTileIndex, int targetTileNumber)
+    public bool CanMatch(int targetTileIndex, int targetTileNumber, bool animated = true)
     {
         if (!(Number == targetTileNumber || Number + targetTileNumber == 10)) return false;
 
@@ -155,6 +185,8 @@ public class Tile : MonoBehaviour
             {
                 if (!BoardController.Instance.TileList[current].IsDisabled)
                 {
+                    if (!animated) return false;
+                    
                     sequence.Join(BoardController.Instance.TileList[current].Jiggle());
                     canMatch = false;
                 }
@@ -176,6 +208,8 @@ public class Tile : MonoBehaviour
         {
             if (!BoardController.Instance.TileList[i].IsDisabled)
             {
+                if (!animated) return false;
+                
                 sequence2.Join(BoardController.Instance.TileList[i].Jiggle());
                 canMatch2 = false;
             }
