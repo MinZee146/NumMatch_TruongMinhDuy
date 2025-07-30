@@ -71,10 +71,11 @@ public class GameManager : Singleton<GameManager>
         _stageText.text = $"Stage: {CurrentStage}";
         CurrentAddTiles = AddMorePerStage;
         _addTileCountText.text = CurrentAddTiles.ToString();
+        BoardController.Instance.ClearBoard();
         
         GenerateGemMission();
         
-        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().Test());
+        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().GenerateStage(CurrentStage));
     }
 
     public void ToggleLosePopUp()

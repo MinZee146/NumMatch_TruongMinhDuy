@@ -285,13 +285,15 @@ public class BoardController : Singleton<BoardController>
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
     }
 
-    private void CheckForGameOver()
+    public void CheckForGameOver()
     {
-        if (_totalRows == 0)
+        if (GameManager.Instance.CurrentGemMissions.Count(m => m.TargetAmount > 0) == 0)
         {
             GameManager.Instance.ToggleWinPopup();
         }
-        else if (GameManager.Instance.CurrentAddTiles <= 0 && !HasAnyValidMatch())
+        else if (GameManager.Instance.CurrentAddTiles <= 0 
+                 && !HasAnyValidMatch() 
+                 && GameManager.Instance.CurrentGemMissions.Count(m => m.TargetAmount > 0) > 1)
         {
             GameManager.Instance.ToggleLosePopUp();
         }

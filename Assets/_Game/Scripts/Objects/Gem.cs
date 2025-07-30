@@ -56,6 +56,7 @@ public class Gem : MonoBehaviour
         {
             Destroy(gameObject);
             GameManager.Instance.UpdateProgress(GemType);
+            BoardController.Instance.CheckForGameOver();
         });
     }
 }

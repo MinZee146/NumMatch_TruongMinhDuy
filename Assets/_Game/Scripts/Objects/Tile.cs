@@ -101,6 +101,10 @@ public class Tile : MonoBehaviour
         Number = 0;
         _numberText.text = "";
         _button.interactable = false;
+        
+        if (Gem != null)
+            Destroy(Gem.gameObject);
+        Gem = null;
     }
 
     public Sequence SpawnAnimation()
