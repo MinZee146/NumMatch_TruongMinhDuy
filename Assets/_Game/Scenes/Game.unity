@@ -316,6 +316,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stageText: {fileID: 2025566366}
   _addTileCountText: {fileID: 1654612050}
+  _losePopUp: {fileID: 8532919776499037478, guid: 8562127a2dbb568438057b8522761b30, type: 3}
+  _winPopUp: {fileID: 8532919776499037478, guid: a5bd5ebea02966448953ad363d671054, type: 3}
 --- !u!4 &109250356
 Transform:
   m_ObjectHideFlags: 0
@@ -1380,7 +1382,7 @@ GameObject:
   - component: {fileID: 1343448309}
   m_Layer: 5
   m_Name: GoalsContainer
-  m_TagString: Untagged
+  m_TagString: GemCollector
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

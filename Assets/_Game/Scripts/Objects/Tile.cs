@@ -10,12 +10,15 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject _selector;
     [SerializeField] private Color _normalTextColor, _disabledTextColor, _fadeColor;
     [SerializeField] private Button _button;
+    [SerializeField] private GameObject _gemPrefab;
+    
+    private Gem _gem;
 
     public int Index { get; private set; }
     public int Number { get; private set; }
     public bool IsDisabled { get; private set; }
     
-    public void LoadData(int number, int index, bool isDisabled = false, bool fade = false)
+    public void LoadData(int number, int index, bool isDisabled = false, bool fade = false, bool hasGem = false, GemType gemType = GemType.Orange)
     {
         Number = number;
         Index = index;
@@ -27,12 +30,24 @@ public class Tile : MonoBehaviour
         _button.interactable = !isDisabled;
         
         _button.onClick.RemoveAllListeners();
+        
         if (!isDisabled)
             _button.onClick.AddListener(() => BoardController.Instance.UpdateCurrentSelectedTile(this));
+
+        if (hasGem)
+        {
+            _gem = Instantiate(_gemPrefab, transform).GetComponent<Gem>();
+            _gem.LoadData(Number, gemType);
+        }
     }
 
     public void UpdateSelector(bool isSelected)
     {
+        if (_gem != null)
+        {
+            _gem.UpdateSelector(isSelected);
+        }
+        
         if (isSelected)
         {
             _selector.transform.DOScale(1f, 0.2f);
@@ -51,6 +66,12 @@ public class Tile : MonoBehaviour
 
     public void Disable()
     {
+        if (_gem != null)
+        {
+            _gem.CollectAnimation(GameObject.FindWithTag("GemCollector").transform);
+            _gem = null;
+        }
+        
         IsDisabled = true;
         
         _button.interactable = false;

@@ -79,7 +79,7 @@ public class BoardController : Singleton<BoardController>
     {
         for (var i = 0; i < 27; i++)
         {
-            _tileList[i].LoadData(board[i], i);
+            _tileList[i].LoadData(board[i], i, hasGem:true, gemType: GemType.Orange);
         }
         
         _currentNumberedTiles = 27;
@@ -201,7 +201,7 @@ public class BoardController : Singleton<BoardController>
             }
         }
         
-        sequence.AppendCallback(CheckForWinning);
+        sequence.AppendCallback(CheckForGameOver);
     }
 
     //Move all the rows below up one row and delete the last row
@@ -241,12 +241,54 @@ public class BoardController : Singleton<BoardController>
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
     }
 
-    private void CheckForWinning()
+    private void CheckForGameOver()
     {
         if (_totalRows == 0)
         {
-            GameManager.Instance.ProceedsToNextStage();
+            GameManager.Instance.ToggleWinPopup();
         }
+        else if (GameManager.Instance.CurrentAddTiles <= 0 && !HasAnyValidMatch())
+        {
+            GameManager.Instance.ToggleLosePopUp();
+        }
+    }
+    
+    private bool HasAnyValidMatch()
+    {
+        for (var i = 0; i < _currentNumberedTiles; i++)
+        {
+            var tileA = _tileList[i];
+        
+            if (tileA.IsDisabled || tileA.Number == 0)
+                continue;
+
+            for (var j = i + 1; j < _currentNumberedTiles; j++)
+            {
+                var tileB = _tileList[j];
+            
+                if (tileB.IsDisabled || tileB.Number == 0)
+                    continue;
+
+                if (tileA.CanMatch(tileB.Index, tileB.Number))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void ClearBoard()
+    {
+        foreach (var tile in _tileList)
+        {
+            tile.Clear();
+        }
+        
+        _currentNumberedTiles = 0;
+        _currentSelectedTile = null;
+        _totalRows = 0;
+        _scrollRect.verticalNormalizedPosition = 1f;
+        _scrollRect.enabled = false;
     }
 
     public void DebugLog()
