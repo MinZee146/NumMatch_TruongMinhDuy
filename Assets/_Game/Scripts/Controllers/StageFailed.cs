@@ -10,6 +10,6 @@ public class StageFailed : MonoBehaviour
     void Start()
     {
         _levelText.text = $"LEVEL {GameManager.Instance.CurrentStage}";
-        
+        _tryAgain.onClick.AddListener(() => GameManager.Instance.ToggleLosePopUp());
     }
 }

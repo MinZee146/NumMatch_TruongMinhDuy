@@ -43,9 +43,14 @@ public class BoardController : Singleton<BoardController>
 
         if (incompleteTypes.Count == 0) return;
 
+        var maxGemsPerTurn = GameManager.Instance.MaxGemsPerTurn;
+        var gemsPlaced = 0;
+
         for (var i = 0; i < numbers.Count; i++)
         {
-            var forceGem = i % gemEvery == 0;
+            if (gemsPlaced >= maxGemsPerTurn) break;
+
+            var forceGem = (i + 1) % gemEvery == 0;
             var tryGem = forceGem || Random.value < gemChance;
 
             if (!tryGem) continue;
@@ -53,7 +58,7 @@ public class BoardController : Singleton<BoardController>
             var canMatchWithAnotherGem = false;
             foreach (var j in gemIndices)
             {
-                if (_tileList[j].CanMatch(i, numbers[i], false))
+                if (tiles[j].CanMatch(i, numbers[i], false))
                 {
                     canMatchWithAnotherGem = true;
                     break;
@@ -65,6 +70,7 @@ public class BoardController : Singleton<BoardController>
             var selectedType = incompleteTypes[Random.Range(0, incompleteTypes.Count)];
             tiles[i].SetGem(selectedType);
             gemIndices.Add(i);
+            gemsPlaced++;
         }
     }
 
@@ -287,17 +293,19 @@ public class BoardController : Singleton<BoardController>
 
     public void CheckForGameOver()
     {
-        if (GameManager.Instance.CurrentGemMissions.Count(m => m.TargetAmount > 0) == 0)
+        var remainingGems = GameManager.Instance.CurrentGemMissions.Count(m => m.TargetAmount > 0);
+        var outOfTiles = GameManager.Instance.CurrentAddTiles <= 0;
+
+        if (remainingGems == 0)
         {
             GameManager.Instance.ToggleWinPopup();
         }
-        else if (GameManager.Instance.CurrentAddTiles <= 0 
-                 && !HasAnyValidMatch() 
-                 && GameManager.Instance.CurrentGemMissions.Count(m => m.TargetAmount > 0) > 1)
+        else if ((!HasAnyValidMatch() && outOfTiles) || (_currentNumberedTiles == 0 && remainingGems > 0))
         {
             GameManager.Instance.ToggleLosePopUp();
         }
     }
+
     
     private bool HasAnyValidMatch()
     {
@@ -315,7 +323,7 @@ public class BoardController : Singleton<BoardController>
                 if (tileB.IsDisabled || tileB.Number == 0)
                     continue;
 
-                if (tileA.CanMatch(tileB.Index, tileB.Number))
+                if (tileA.CanMatch(tileB.Index, tileB.Number, false))
                     return true;
             }
         }

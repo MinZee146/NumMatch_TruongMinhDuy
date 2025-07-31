@@ -16,6 +16,7 @@ public class GameManager : Singleton<GameManager>
     public List<GemMission> CurrentGemMissions { get; private set; }
     public int CurrentStage { get; private set; }
     public int CurrentAddTiles { get; private set; }
+    public int MaxGemsPerTurn { get; private set; }
 
     [SerializeField] private TextMeshProUGUI _stageText;
     [SerializeField] private TextMeshProUGUI _addTileCountText;
@@ -44,9 +45,11 @@ public class GameManager : Singleton<GameManager>
             .Select(type => new GemMission
             {
                 Type = type,
-                TargetAmount = Random.Range(1, 6)
+                TargetAmount = Random.Range(3, 6)
             })
             .ToList();
+        
+        MaxGemsPerTurn = CurrentGemMissions.Count;
 
         foreach (var mission in CurrentGemMissions)
         {
