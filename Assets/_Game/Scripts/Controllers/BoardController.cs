@@ -91,9 +91,10 @@ public class BoardController : Singleton<BoardController>
 
         // Check if more rows are needed
         var neededCapacity = _currentNumberedTiles + numbersToCopy.Count;
+        Debug.Log(neededCapacity);
         
         // Enable scroll
-        if (neededCapacity > 90)
+        if (neededCapacity > 81)
         {
             _scrollRect.enabled = true;
         }
@@ -120,7 +121,6 @@ public class BoardController : Singleton<BoardController>
         _currentNumberedTiles += numbersToCopy.Count;
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
     }
-
 
     public void LoadInitialData(List<int> board)
     {
