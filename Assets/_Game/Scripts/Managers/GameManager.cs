@@ -31,6 +31,7 @@ public class GameManager : Singleton<GameManager>
     
     private void Start()
     {
+        Application.targetFrameRate = 60;
         BoardController.Instance.GenerateBoard(9 * 10);
         ProceedsToNextStage();
     }
