@@ -56,6 +56,9 @@ public class BoardController : Singleton<BoardController>
             if (!tryGem) continue;
 
             var canMatchWithAnotherGem = false;
+            
+            tiles[i].Number = numbers[i];
+            
             foreach (var j in gemIndices)
             {
                 if (tiles[j].CanMatch(i, numbers[i], false))

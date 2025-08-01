@@ -14,7 +14,7 @@ public class Tile : MonoBehaviour
 
     public Gem Gem { get; private set; }
     public int Index { get; private set; }
-    public int Number { get; private set; }
+    public int Number { get; set; }
     public bool IsDisabled { get; private set; }
     
     public void LoadData(int number, int index, bool isDisabled = false, bool fade = false, Gem gem = null)
