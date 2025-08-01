@@ -1632,7 +1632,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1420083507}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 914774796}
+        m_TargetAssemblyTypeName: BoardController, Assembly-CSharp
+        m_MethodName: Hint
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 503720135}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1612672042
 GameObject:
   m_ObjectHideFlags: 0
