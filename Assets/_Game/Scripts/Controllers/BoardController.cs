@@ -352,6 +352,36 @@ public class BoardController : Singleton<BoardController>
         _scrollRect.enabled = false;
     }
 
+    public void Hint(GameObject addTileButton)
+    {
+        var sequence = DOTween.Sequence();
+        
+        for (var i = 0; i < _currentNumberedTiles; i++)
+        {
+            var tileA = _tileList[i];
+        
+            if (tileA.IsDisabled || tileA.Number == 0)
+                continue;
+
+            for (var j = i + 1; j < _currentNumberedTiles; j++)
+            {
+                var tileB = _tileList[j];
+            
+                if (tileB.IsDisabled || tileB.Number == 0)
+                    continue;
+
+                if (tileA.CanMatch(tileB.Index, tileB.Number, false))
+                {
+                    sequence.Join(tileA.ClearAnimation());
+                    sequence.Join(tileB.ClearAnimation());
+                    return;
+                }
+            }
+        }
+        
+        sequence.Append(addTileButton.transform.DOShakePosition(0.5f, 10f));
+    }
+
     public void DebugLog()
     {
         Debug.Log(_currentNumberedTiles);
