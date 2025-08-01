@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -133,7 +134,7 @@ public class GameManager : Singleton<GameManager>
 
     public void AddMoreTiles()
     {
-        if (CurrentAddTiles <= 0) return;
+        if (CurrentAddTiles <= 0 || DOTween.TotalPlayingTweens() > 0) return;
         
         CurrentAddTiles--;
         _addTileCountText.text = CurrentAddTiles.ToString();

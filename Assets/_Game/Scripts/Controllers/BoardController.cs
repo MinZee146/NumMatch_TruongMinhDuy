@@ -94,7 +94,6 @@ public class BoardController : Singleton<BoardController>
 
         // Check if more rows are needed
         var neededCapacity = _currentNumberedTiles + numbersToCopy.Count;
-        Debug.Log(neededCapacity);
         
         // Enable scroll
         if (neededCapacity > 81)
@@ -205,7 +204,12 @@ public class BoardController : Singleton<BoardController>
             }
         }
 
-        if (clearedRows.Count == 0) return;
+        if (clearedRows.Count == 0)
+        {
+            sequence.AppendInterval(1.5f);
+            sequence.AppendCallback(CheckForGameOver);
+            return;
+        }
         
         clearedRows.Sort((a, b) => b.CompareTo(a));
         
