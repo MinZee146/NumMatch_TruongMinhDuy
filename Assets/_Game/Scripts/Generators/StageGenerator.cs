@@ -6,10 +6,6 @@ using Random = System.Random;
 
 public class StageGenerator : MonoBehaviour
 {
-    private const int Rows = 3;
-    private const int Cols = 9;
-    private const int TotalTiles = Rows * Cols;
-    
     private Random _rng = new();
     
     //Generate 27 random numbers, then fix the extra pairs
