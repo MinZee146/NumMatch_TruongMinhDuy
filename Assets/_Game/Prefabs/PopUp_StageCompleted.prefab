@@ -693,6 +693,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _levelText: {fileID: 8532919776477495713}
   _nextLevel: {fileID: 8532919776818900835}
+  _gemImagePrefab: {fileID: 4493437231180825105, guid: 36a299a146bf18644a46f1fb7cf82d94, type: 3}
+  _gemImageParent: {fileID: 1548081861438497634}
 --- !u!1 &8532919776804781179
 GameObject:
   m_ObjectHideFlags: 0

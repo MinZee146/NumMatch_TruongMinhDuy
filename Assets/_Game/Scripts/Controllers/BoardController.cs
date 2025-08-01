@@ -37,7 +37,7 @@ public class BoardController : Singleton<BoardController>
         HashSet<int> gemIndices = new();
 
         var incompleteTypes = GameManager.Instance.CurrentGemMissions
-            .Where(m => m.TargetAmount > 0)
+            .Where(m => m.GemsLeftCount > 0)
             .Select(m => m.Type)
             .ToList();
 
@@ -238,7 +238,7 @@ public class BoardController : Singleton<BoardController>
                     miniSequence.Append(tile.ClearAnimation());
                 }
             }
-            
+
             sequence.Join(miniSequence);
         }
         
@@ -296,7 +296,7 @@ public class BoardController : Singleton<BoardController>
 
     public void CheckForGameOver()
     {
-        var remainingGems = GameManager.Instance.CurrentGemMissions.Count(m => m.TargetAmount > 0);
+        var remainingGems = GameManager.Instance.CurrentGemMissions.Count(m => m.GemsLeftCount > 0);
         var outOfTiles = GameManager.Instance.CurrentAddTiles <= 0;
 
         if (remainingGems == 0)

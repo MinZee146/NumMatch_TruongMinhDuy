@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [System.Serializable]
 public class GemMission
 {
     public GemType Type;
+    public int GemsLeftCount;
     public int TargetAmount;
 }
 
@@ -43,10 +45,15 @@ public class GameManager : Singleton<GameManager>
         var selectedTypes = allTypes.OrderBy(_ => Random.value).Take(typeCount);
 
         CurrentGemMissions = selectedTypes
-            .Select(type => new GemMission
+            .Select(type =>
             {
+                var target = Random.Range(3, 6);
+                return new GemMission
+                {
                 Type = type,
-                TargetAmount = Random.Range(3, 6)
+                TargetAmount = target,
+                GemsLeftCount = target
+            };
             })
             .ToList();
         
@@ -73,10 +80,10 @@ public class GameManager : Singleton<GameManager>
 
     public void UpdateProgress(GemType gemType)
     {
-        var gemMission = _goals.Find(_ => _.gemType == gemType);
+        var gemMission = _goals.Find(goal => goal.gemType == gemType);
         gemMission.goal.UpdateProgress();
 
-        CurrentGemMissions.Find(_ => _.Type == gemType).TargetAmount--;
+        CurrentGemMissions.Find(mission => mission.Type == gemType).GemsLeftCount--;
     }
 
     private void ProceedsToNextStage()
@@ -90,7 +97,7 @@ public class GameManager : Singleton<GameManager>
         ResetMissionsUI();
         GenerateGemMission();
         
-        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().GenerateStage(CurrentStage));
+        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().Test());
     }
 
     public void ToggleLosePopUp()
@@ -103,7 +110,7 @@ public class GameManager : Singleton<GameManager>
                 ProceedsToNextStage();
             }
                 
-            _lose.SetActive(!_win.activeSelf);
+            _lose.SetActive(!_lose.activeSelf);
             return;
         }
         
