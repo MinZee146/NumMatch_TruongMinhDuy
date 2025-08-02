@@ -9,7 +9,7 @@ public class BoardController : Singleton<BoardController>
 {
     public IReadOnlyList<Tile> TileList => _tileList;
     
-    [SerializeField] private GameObject _tilePrefab;
+    [SerializeField] private GameObject _tilePrefab, _linePrefab;
     [SerializeField] private Transform _tilesContainer;
     [SerializeField] private ScrollRect _scrollRect;
     
@@ -157,8 +157,13 @@ public class BoardController : Singleton<BoardController>
             {
                 AudioManager.Instance.PlaySfx("pair_clear");
                 
+                var line = Instantiate(_linePrefab, transform).GetComponent<UILine>();
+                line.CreateLine(tile.transform.position, _currentSelectedTile.transform.position);
+                
                 _currentSelectedTile.Disable();
                 tile.Disable();
+                
+                line.FadeAndDestroy();
                 
                 CheckAndCollapseEmptyRows();
 
