@@ -356,3 +356,4 @@ MonoBehaviour:
   _fadeColor: {r: 0, g: 0, b: 0, a: 0}
   _button: {fileID: 3393316000093958095}
   _gemPrefab: {fileID: 2936470630460244970, guid: 6ba655948de6dab4183c145b7346d21a, type: 3}
+  _linePrefab: {fileID: 893777414941054538, guid: 122ec8790021feb438259c5ef369609f, type: 3}

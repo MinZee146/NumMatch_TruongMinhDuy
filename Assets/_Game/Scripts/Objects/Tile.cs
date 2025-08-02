@@ -10,7 +10,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject _selector;
     [SerializeField] private Color _normalTextColor, _disabledTextColor, _fadeColor;
     [SerializeField] private Button _button;
-    [SerializeField] private GameObject _gemPrefab;
+    [SerializeField] private GameObject _gemPrefab, _linePrefab;
 
     public Gem Gem { get; private set; }
     public int Index { get; private set; }
@@ -158,7 +158,7 @@ public class Tile : MonoBehaviour
         if (!(Number == targetTileNumber || Number + targetTileNumber == 10)) return false;
 
         const int cols = 9;
-        
+
         int row1 = Index / cols, col1 = Index % cols;
         int row2 = targetTileIndex / cols, col2 = targetTileIndex % cols;
 
@@ -183,14 +183,14 @@ public class Tile : MonoBehaviour
         {
             var sequence = DOTween.Sequence();
             var canMatch = true;
-            
+
             var current = Index + step;
             while (current != targetTileIndex)
             {
                 if (!BoardController.Instance.TileList[current].IsDisabled)
                 {
                     if (!animated) return false;
-                    
+
                     sequence.Join(BoardController.Instance.TileList[current].Jiggle());
                     canMatch = false;
                 }
@@ -198,13 +198,19 @@ public class Tile : MonoBehaviour
                 current += step;
             }
 
-            return canMatch;
+            if (!canMatch || !animated) return canMatch;
+            var line = Instantiate(_linePrefab, transform).GetComponent<UILine>();
+            line.CreateLine(BoardController.Instance.TileList[targetTileIndex].transform.position, transform.position);
+            line.FadeAndDestroy();
+
+            return true;
         }
-        
+
         //Special case: return true if nothing blocks in array
+        // Special case: return true if nothing blocks in array
         var start = Mathf.Min(Index, targetTileIndex) + 1;
         var end = Mathf.Max(Index, targetTileIndex);
-        
+
         var sequence2 = DOTween.Sequence();
         var canMatch2 = true;
 
@@ -213,12 +219,25 @@ public class Tile : MonoBehaviour
             if (!BoardController.Instance.TileList[i].IsDisabled)
             {
                 if (!animated) return false;
-                
+
                 sequence2.Join(BoardController.Instance.TileList[i].Jiggle());
                 canMatch2 = false;
             }
         }
 
-        return canMatch2;
+        if (!canMatch2 || !animated) return canMatch2;
+        
+        var endOfRow1 = BoardController.Instance.TileList[row1 * cols + (cols - 1)].transform.position;
+        var startOfRow2 = BoardController.Instance.TileList[row2 * cols].transform.position;
+
+        var line1 = Instantiate(_linePrefab, transform).GetComponent<UILine>();
+        line1.CreateLine(transform.position, endOfRow1);
+        line1.FadeAndDestroy();
+
+        var line2 = Instantiate(_linePrefab, transform).GetComponent<UILine>();
+        line2.CreateLine(startOfRow2, BoardController.Instance.TileList[targetTileIndex].transform.position);
+        line2.FadeAndDestroy();
+
+        return true;
     }
 }
