@@ -11,6 +11,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private Color _normalTextColor, _disabledTextColor, _fadeColor;
     [SerializeField] private Button _button;
     [SerializeField] private GameObject _gemPrefab, _linePrefab;
+    [SerializeField] private Sprite _hintIndicator;
 
     public Gem Gem { get; private set; }
     public int Index { get; private set; }
@@ -151,6 +152,25 @@ public class Tile : MonoBehaviour
     {
         return _numberText.transform.DOShakePosition(0.5f, 9f);
     }
+
+    public Tween HintAnimation()
+    {
+        var image = _selector.GetComponent<Image>();
+        image.sprite = _hintIndicator;
+
+        var sequence = DOTween.Sequence();
+
+        sequence.Append(_selector.transform.DOScale(1f, 0.1f)) 
+            .Append(_selector.transform.DORotate(new Vector3(0, 0, 360f), 0.5f, RotateMode.FastBeyond360))
+            .AppendInterval(0.5f)
+            .Append(_selector.transform.DOScale(0f, 0.1f))
+            .OnComplete(() => {
+                image.sprite = null;
+            });
+
+        return sequence;
+    }
+
     
     //Assuming that both tiles are still active
     public bool CanMatch(int targetTileIndex, int targetTileNumber, bool animated = true)

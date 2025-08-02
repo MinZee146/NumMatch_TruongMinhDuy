@@ -34,7 +34,6 @@ public class GameManager : Singleton<GameManager>
     
     private void Start()
     {
-        Application.targetFrameRate = 60;
         BoardController.Instance.GenerateBoard(9 * 10);
         ProceedsToNextStage();
     }
@@ -51,10 +50,10 @@ public class GameManager : Singleton<GameManager>
                 var target = Random.Range(3, 6);
                 return new GemMission
                 {
-                Type = type,
-                TargetAmount = target,
-                GemsLeftCount = target
-            };
+                    Type = type,
+                    TargetAmount = target,
+                    GemsLeftCount = target
+                };
             })
             .ToList();
         

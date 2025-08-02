@@ -142,9 +142,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '
-
-'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b39284482f8e15944985e99303c3f2b2, type: 2}
   m_sharedMaterial: {fileID: -610037393800652500, guid: b39284482f8e15944985e99303c3f2b2, type: 2}
@@ -357,3 +355,4 @@ MonoBehaviour:
   _button: {fileID: 3393316000093958095}
   _gemPrefab: {fileID: 2936470630460244970, guid: 6ba655948de6dab4183c145b7346d21a, type: 3}
   _linePrefab: {fileID: 893777414941054538, guid: 122ec8790021feb438259c5ef369609f, type: 3}
+  _hintIndicator: {fileID: 21300000, guid: bdf819157995f0d4ba39d906f9b0ee1f, type: 3}

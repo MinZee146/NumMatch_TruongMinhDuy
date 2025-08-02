@@ -232,7 +232,7 @@ public class BoardController : Singleton<BoardController>
             {
                 var tile = _tileList[row * Cols + col];
 
-                if (row < _totalRows)
+                if (row < _totalRows && Mathf.Abs(tile.Index - _currentSelectedTile.Index) <= 98)
                 {
                     tile.SetUpClearAnimation(offset);
                 }
@@ -253,7 +253,9 @@ public class BoardController : Singleton<BoardController>
             for (var col = 0; col < Cols; col++)
             {
                 var tile = _tileList[row * Cols + col];
-                sequence.Join(tile.SlideAnimation());
+                
+                if (Mathf.Abs(tile.Index - _currentSelectedTile.Index) <= 98)
+                    sequence.Join(tile.SlideAnimation());
             }
         }
         
@@ -354,6 +356,7 @@ public class BoardController : Singleton<BoardController>
 
     public void Hint(GameObject addTileButton)
     {
+        if (DOTween.TotalPlayingTweens() > 0) return;
         var sequence = DOTween.Sequence();
         
         for (var i = 0; i < _currentNumberedTiles; i++)
@@ -372,8 +375,8 @@ public class BoardController : Singleton<BoardController>
 
                 if (tileA.CanMatch(tileB.Index, tileB.Number, false))
                 {
-                    sequence.Join(tileA.ClearAnimation());
-                    sequence.Join(tileB.ClearAnimation());
+                    sequence.Join(tileA.HintAnimation());
+                    sequence.Join(tileB.HintAnimation());
                     return;
                 }
             }
@@ -384,6 +387,6 @@ public class BoardController : Singleton<BoardController>
 
     public void DebugLog()
     {
-        Debug.Log(_currentNumberedTiles);
+        Debug.Log(_currentSelectedTile.Index);
     }
 }
