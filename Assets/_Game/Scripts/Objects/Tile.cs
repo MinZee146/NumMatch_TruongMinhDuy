@@ -155,12 +155,6 @@ public class Tile : MonoBehaviour
     //Assuming that both tiles are still active
     public bool CanMatch(int targetTileIndex, int targetTileNumber, bool animated = true)
     {
-        //swap to make animation
-        if (Index > targetTileIndex)
-        {
-            (Index, targetTileIndex) = (targetTileIndex, Index);
-        }
-        
         if (!(Number == targetTileNumber || Number + targetTileNumber == 10)) return false;
 
         const int cols = 9;
@@ -213,6 +207,7 @@ public class Tile : MonoBehaviour
         }
 
         //Special case: return true if nothing blocks in array
+        // Special case: return true if nothing blocks in array
         var start = Mathf.Min(Index, targetTileIndex) + 1;
         var end = Mathf.Max(Index, targetTileIndex);
 
@@ -236,7 +231,7 @@ public class Tile : MonoBehaviour
         var startOfRow2 = BoardController.Instance.TileList[row2 * cols].transform.position;
 
         var line1 = Instantiate(_linePrefab, transform).GetComponent<UILine>();
-        line1.CreateLine(BoardController.Instance.TileList[Index].transform.position, endOfRow1);
+        line1.CreateLine(transform.position, endOfRow1);
         line1.FadeAndDestroy();
 
         var line2 = Instantiate(_linePrefab, transform).GetComponent<UILine>();

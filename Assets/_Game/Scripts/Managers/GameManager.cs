@@ -98,7 +98,7 @@ public class GameManager : Singleton<GameManager>
         ResetMissionsUI();
         GenerateGemMission();
         
-        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().Test());
+        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().GenerateStage(CurrentStage));
     }
 
     public void ToggleLosePopUp()
