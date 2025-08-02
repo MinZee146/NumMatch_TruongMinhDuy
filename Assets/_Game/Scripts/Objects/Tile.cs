@@ -207,7 +207,6 @@ public class Tile : MonoBehaviour
         }
 
         //Special case: return true if nothing blocks in array
-        // Special case: return true if nothing blocks in array
         var start = Mathf.Min(Index, targetTileIndex) + 1;
         var end = Mathf.Max(Index, targetTileIndex);
 
@@ -227,15 +226,33 @@ public class Tile : MonoBehaviour
 
         if (!canMatch2 || !animated) return canMatch2;
         
-        var endOfRow1 = BoardController.Instance.TileList[row1 * cols + (cols - 1)].transform.position;
-        var startOfRow2 = BoardController.Instance.TileList[row2 * cols].transform.position;
+        int upperIndex, lowerIndex;
+        int upperRow, lowerRow;
+
+        if (row1 < row2)
+        {
+            upperIndex = Index;
+            upperRow = row1;
+            lowerIndex = targetTileIndex;
+            lowerRow = row2;
+        }
+        else
+        {
+            upperIndex = targetTileIndex;
+            upperRow = row2;
+            lowerIndex = Index;
+            lowerRow = row1;
+        }
+
+        var endOfUpperRow = BoardController.Instance.TileList[upperRow * cols + (cols - 1)].transform.position;
+        var startOfLowerRow = BoardController.Instance.TileList[lowerRow * cols].transform.position;
 
         var line1 = Instantiate(_linePrefab, transform).GetComponent<UILine>();
-        line1.CreateLine(transform.position, endOfRow1);
+        line1.CreateLine(BoardController.Instance.TileList[upperIndex].transform.position, endOfUpperRow);
         line1.FadeAndDestroy();
 
         var line2 = Instantiate(_linePrefab, transform).GetComponent<UILine>();
-        line2.CreateLine(startOfRow2, BoardController.Instance.TileList[targetTileIndex].transform.position);
+        line2.CreateLine(startOfLowerRow, BoardController.Instance.TileList[lowerIndex].transform.position);
         line2.FadeAndDestroy();
 
         return true;
