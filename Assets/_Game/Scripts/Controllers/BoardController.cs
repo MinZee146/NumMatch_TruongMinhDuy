@@ -390,11 +390,10 @@ public class BoardController : Singleton<BoardController>
         }
         
         var seq = DOTween.Sequence();
-        seq.Append(addTileButton.transform.DOScale(1.15f, 0.15f).SetEase(Ease.OutBack));
+        seq.Append(addTileButton.transform.DOScale(1.2f, 0.15f).SetEase(Ease.OutBack));
+        seq.Join(addTileButton.transform.DORotate(new Vector3(0, 0, 10f), 0.15f));
         seq.Append(addTileButton.transform.DOScale(1f, 0.15f).SetEase(Ease.InBack));
-
-        var image = addTileButton.GetComponent<Image>();
-        image.DOFade(0.5f, 0.15f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine);
+        seq.Join(addTileButton.transform.DORotate(Vector3.zero, 0.15f));
     }
 
     public void DebugLog()
