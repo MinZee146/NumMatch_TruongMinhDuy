@@ -101,7 +101,7 @@ public class BoardController : Singleton<BoardController>
             _scrollRect.enabled = true;
         }
         
-        while (_tileList.Count < neededCapacity)
+        while (_tileList.Count < neededCapacity + 18)
         {
             // Instantiate more rows
             for (var i = 0; i < Cols; i++)
