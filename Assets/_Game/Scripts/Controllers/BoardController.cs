@@ -42,7 +42,7 @@ public class BoardController : Singleton<BoardController>
             .ToList();
 
         if (incompleteTypes.Count == 0) return;
-
+        
         var maxGemsPerTurn = GameManager.Instance.MaxGemsPerTurn;
         var gemsPlaced = 0;
 
@@ -122,6 +122,8 @@ public class BoardController : Singleton<BoardController>
         
         _currentNumberedTiles += numbersToCopy.Count;
         _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
+        
+        CheckForGameOver();
     }
 
     public void LoadInitialData(List<int> board)
@@ -353,6 +355,9 @@ public class BoardController : Singleton<BoardController>
             tile.Clear();
         }
         
+        if (_currentSelectedTile != null)
+            _currentSelectedTile.UpdateSelector(false);
+        
         _currentNumberedTiles = 0;
         _currentSelectedTile = null;
         _totalRows = 0;
@@ -394,10 +399,5 @@ public class BoardController : Singleton<BoardController>
         seq.Join(addTileButton.transform.DORotate(new Vector3(0, 0, 10f), 0.15f));
         seq.Append(addTileButton.transform.DOScale(1f, 0.15f).SetEase(Ease.InBack));
         seq.Join(addTileButton.transform.DORotate(Vector3.zero, 0.15f));
-    }
-
-    public void DebugLog()
-    {
-        Debug.Log(_currentSelectedTile.Index);
     }
 }

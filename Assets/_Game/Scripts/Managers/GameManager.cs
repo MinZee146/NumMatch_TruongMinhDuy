@@ -92,11 +92,13 @@ public class GameManager : Singleton<GameManager>
         CurrentAddTiles = AddMorePerStage;
         _addTileCountText.text = CurrentAddTiles.ToString();
         
+        MaxGemsPerTurn = CurrentGemMissions.Count(mission => mission.GemsLeftCount > 0);
+        
         BoardController.Instance.ClearBoard();
-        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().GenerateStage(CurrentStage));
+        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().Test());
     }
 
-    public void ProceedsToNextLevel()
+    private void ProceedsToNextLevel()
     {
         BoardController.Instance.ClearBoard();
         
