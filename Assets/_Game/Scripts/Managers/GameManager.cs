@@ -95,7 +95,7 @@ public class GameManager : Singleton<GameManager>
         MaxGemsPerTurn = CurrentGemMissions.Count(mission => mission.GemsLeftCount > 0);
         
         BoardController.Instance.ClearBoard();
-        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().Test());
+        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().GenerateStage(CurrentStage));
     }
 
     private void ProceedsToNextLevel()
