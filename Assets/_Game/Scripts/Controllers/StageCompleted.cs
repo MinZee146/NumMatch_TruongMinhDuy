@@ -5,20 +5,17 @@ using UnityEngine.UI;
 
 public class StageCompleted : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI _levelText;
     [SerializeField] private Button _nextLevel;
     [SerializeField] private GameObject _gemImagePrefab;
     [SerializeField] private Transform _gemImageParent;
 
     private void Start()
     {
-        _nextLevel.onClick.AddListener(() => GameManager.Instance.ToggleWinPopup(false));
+        _nextLevel.onClick.AddListener(() => GameManager.Instance.ToggleWinPopUp(false));
     }
 
     private void OnEnable()
     {
-        _levelText.text = $"LEVEL {GameManager.Instance.CurrentStage} COMPLETED";
-
         foreach (Transform gemImage in _gemImageParent)
         {
             Destroy(gemImage.gameObject);

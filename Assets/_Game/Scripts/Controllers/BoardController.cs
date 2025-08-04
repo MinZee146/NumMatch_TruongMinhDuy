@@ -309,7 +309,11 @@ public class BoardController : Singleton<BoardController>
 
         if (remainingGems == 0)
         {
-            GameManager.Instance.ToggleWinPopup(true);
+            GameManager.Instance.ToggleWinPopUp(true);
+        }
+        else if (_totalRows == 0)
+        {
+            GameManager.Instance.ProceedsToNextStage();
         }
         else if (outOfTiles && remainingGems > 0 && !HasAnyValidMatch())
         {

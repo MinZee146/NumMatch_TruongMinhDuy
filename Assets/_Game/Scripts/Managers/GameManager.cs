@@ -15,7 +15,7 @@ public class GemMission
 public class GameManager : Singleton<GameManager>
 {
     public Transform GemCollector => _gemsCollector.transform;
-    public List<GemMission> CurrentGemMissions { get; private set; }
+    public List<GemMission> CurrentGemMissions { get; private set; } = new();
     public int CurrentStage { get; private set; }
     public int CurrentAddTiles { get; private set; }
     public int MaxGemsPerTurn { get; private set; }
@@ -34,7 +34,7 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         BoardController.Instance.GenerateBoard(9 * 10);
-        ProceedsToNextStage();
+        ProceedsToNextLevel();
     }
     
     private void GenerateGemMission()
@@ -76,7 +76,7 @@ public class GameManager : Singleton<GameManager>
         
         _goals.Clear();
     }
-
+    
     public void UpdateProgress(GemType gemType)
     {
         var gemMission = _goals.Find(goal => goal.gemType == gemType);
@@ -85,7 +85,7 @@ public class GameManager : Singleton<GameManager>
         CurrentGemMissions.Find(mission => mission.Type == gemType).GemsLeftCount--;
     }
 
-    private void ProceedsToNextStage()
+    public void ProceedsToNextStage()
     {
         CurrentStage++;
         _stageText.text = $"Stage: {CurrentStage}";
@@ -93,10 +93,18 @@ public class GameManager : Singleton<GameManager>
         _addTileCountText.text = CurrentAddTiles.ToString();
         
         BoardController.Instance.ClearBoard();
+        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().GenerateStage(CurrentStage));
+    }
+
+    public void ProceedsToNextLevel()
+    {
+        BoardController.Instance.ClearBoard();
+        
+        CurrentStage = 0;
+        
         ResetMissionsUI();
         GenerateGemMission();
-        
-        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().Test());
+        ProceedsToNextStage();
     }
 
     public void ToggleLosePopUp(bool active)
@@ -116,12 +124,11 @@ public class GameManager : Singleton<GameManager>
         else
         {
             _lose.SetActive(false);
-            CurrentStage--;
-            ProceedsToNextStage();
+            ProceedsToNextLevel();
         }
     }
 
-    public void ToggleWinPopup(bool active)
+    public void ToggleWinPopUp(bool active)
     {
         if (active)
         {
@@ -138,7 +145,7 @@ public class GameManager : Singleton<GameManager>
         else
         {
             _win.SetActive(false);
-            ProceedsToNextStage();
+            ProceedsToNextLevel();
         }
     }
 

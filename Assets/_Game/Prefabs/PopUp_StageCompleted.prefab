@@ -532,7 +532,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LEVEL 3 COMPL:ETED
+  m_text: LEVEL COMPLETED
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e0933b3f155ade441b4772d43f80a4e5, type: 2}
   m_sharedMaterial: {fileID: 4160582567247789329, guid: e0933b3f155ade441b4772d43f80a4e5, type: 2}
@@ -691,7 +691,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7d72525c752d5439fcb2c4a0f51ca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelText: {fileID: 8532919776477495713}
   _nextLevel: {fileID: 8532919776818900835}
   _gemImagePrefab: {fileID: 4493437231180825105, guid: 36a299a146bf18644a46f1fb7cf82d94, type: 3}
   _gemImageParent: {fileID: 1548081861438497634}
