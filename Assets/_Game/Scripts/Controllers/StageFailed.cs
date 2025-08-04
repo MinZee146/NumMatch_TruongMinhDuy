@@ -11,7 +11,7 @@
 
         private void Start()
         {
-            _tryAgain.onClick.AddListener(() => GameManager.Instance.ToggleLosePopUp());
+            _tryAgain.onClick.AddListener(() => GameManager.Instance.ToggleLosePopUp(false));
         }
         
         private void OnEnable()

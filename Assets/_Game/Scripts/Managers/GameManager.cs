@@ -3,7 +3,6 @@ using System.Linq;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [System.Serializable]
 public class GemMission
@@ -97,38 +96,50 @@ public class GameManager : Singleton<GameManager>
         ResetMissionsUI();
         GenerateGemMission();
         
-        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().GenerateStage(CurrentStage));
+        BoardController.Instance.LoadInitialData(GetComponent<StageGenerator>().Test());
     }
 
-    public void ToggleLosePopUp()
+    public void ToggleLosePopUp(bool active)
     {
-        if (_lose != null)
+        if (active)
         {
-            if (_lose.activeSelf)
+            if (_lose == null)
             {
-                CurrentStage--;
-                ProceedsToNextStage();
+                _lose = Instantiate(_losePopUp, FindObjectOfType<Canvas>().transform);
+                return;
             }
-                
-            _lose.SetActive(!_lose.activeSelf);
-            return;
+            
+            if (_lose.activeSelf) return;
+            
+            _lose.SetActive(true);
         }
-        
-        _lose = Instantiate(_losePopUp, FindObjectOfType<Canvas>().transform);
+        else
+        {
+            _lose.SetActive(false);
+            CurrentStage--;
+            ProceedsToNextStage();
+        }
     }
 
-    public void ToggleWinPopup()
+    public void ToggleWinPopup(bool active)
     {
-        if (_win != null)
+        if (active)
         {
-            if (_win.activeSelf)
-                ProceedsToNextStage();
-                
-            _win.SetActive(!_win.activeSelf);
-            return;
+            if (_win == null)
+            {
+                _win = Instantiate(_winPopUp, FindObjectOfType<Canvas>().transform);
+                return;
+            }
+            
+            if (_win.activeSelf) return;
+            
+            _win.SetActive(true);
         }
-        
-        _win = Instantiate(_winPopUp, FindObjectOfType<Canvas>().transform);
+        else
+        {
+            _win.SetActive(false);
+            ProceedsToNextStage();
+        }
     }
 
     public void AddMoreTiles()

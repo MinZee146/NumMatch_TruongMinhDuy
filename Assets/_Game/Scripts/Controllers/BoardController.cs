@@ -161,10 +161,12 @@ public class BoardController : Singleton<BoardController>
                 tile.Disable();
                 
                 CheckAndCollapseEmptyRows();
-
-                _currentSelectedTile = null;
-                return;
             }
+            
+            tile.InvalidateAnimation();
+            
+            _currentSelectedTile = null;
+            return;
         }
         
         _currentSelectedTile = tile;
@@ -307,11 +309,11 @@ public class BoardController : Singleton<BoardController>
 
         if (remainingGems == 0)
         {
-            GameManager.Instance.ToggleWinPopup();
+            GameManager.Instance.ToggleWinPopup(true);
         }
-        else if ((!HasAnyValidMatch() && outOfTiles) || (_currentNumberedTiles == 0 && remainingGems > 0))
+        else if (outOfTiles && remainingGems > 0 && !HasAnyValidMatch())
         {
-            GameManager.Instance.ToggleLosePopUp();
+            GameManager.Instance.ToggleLosePopUp(true);
         }
     }
 
@@ -357,6 +359,8 @@ public class BoardController : Singleton<BoardController>
     public void Hint(GameObject addTileButton)
     {
         if (DOTween.TotalPlayingTweens() > 0) return;
+        
+        AudioManager.Instance.PlaySfx("pop");
         var sequence = DOTween.Sequence();
         
         for (var i = 0; i < _currentNumberedTiles; i++)

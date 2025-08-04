@@ -62,6 +62,12 @@ public class Tile : MonoBehaviour
 
     public void UpdateSelector(bool isSelected)
     {
+        var image = _selector.GetComponent<Image>();
+        if (DOTween.IsTweening(_selector.transform))
+        {
+            image.sprite = null;
+        }
+
         if (Gem != null)
         {
             Gem.UpdateSelector(isSelected);
@@ -73,14 +79,25 @@ public class Tile : MonoBehaviour
         }
         else
         {
-            var image = _selector.GetComponent<Image>();
-            image.DOFade(0f, 0.2f)
+            _selector.GetComponent<Image>().DOFade(0f, 0.2f)
                 .OnComplete(() =>
             {
                 _selector.transform.localScale = Vector3.zero;
                 image.DOFade(1f, 0f);
             });
         }
+    }
+
+    public void InvalidateAnimation()
+    {
+        _selector.transform.localScale = Vector3.one;
+        var image = _selector.GetComponent<Image>();
+        image.DOFade(0f, 0.2f)
+            .OnComplete(() =>
+            {
+                _selector.transform.localScale = Vector3.zero;
+                image.DOFade(1f, 0f);
+            });
     }
 
     public void Disable()

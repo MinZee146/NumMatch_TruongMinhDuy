@@ -12,7 +12,7 @@ public class StageCompleted : MonoBehaviour
 
     private void Start()
     {
-        _nextLevel.onClick.AddListener(() => GameManager.Instance.ToggleWinPopup());
+        _nextLevel.onClick.AddListener(() => GameManager.Instance.ToggleWinPopup(false));
     }
 
     private void OnEnable()
