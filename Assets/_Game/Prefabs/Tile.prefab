@@ -355,4 +355,4 @@ MonoBehaviour:
   _button: {fileID: 3393316000093958095}
   _gemPrefab: {fileID: 2936470630460244970, guid: 6ba655948de6dab4183c145b7346d21a, type: 3}
   _linePrefab: {fileID: 893777414941054538, guid: 122ec8790021feb438259c5ef369609f, type: 3}
-  _hintIndicator: {fileID: 21300000, guid: bdf819157995f0d4ba39d906f9b0ee1f, type: 3}
+  _hintPrefab: {fileID: 111574736263195887, guid: c4d95e861a5732c4d9cb14b0b7c682cb, type: 3}

@@ -10,8 +10,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject _selector;
     [SerializeField] private Color _normalTextColor, _disabledTextColor, _fadeColor;
     [SerializeField] private Button _button;
-    [SerializeField] private GameObject _gemPrefab, _linePrefab;
-    [SerializeField] private Sprite _hintIndicator;
+    [SerializeField] private GameObject _gemPrefab, _linePrefab, _hintPrefab;
 
     public Gem Gem { get; private set; }
     public int Index { get; private set; }
@@ -170,22 +169,19 @@ public class Tile : MonoBehaviour
         return _numberText.transform.DOShakePosition(0.5f, 9f);
     }
 
-    public Tween HintAnimation()
+    public void HintAnimation()
     {
-        var image = _selector.GetComponent<Image>();
-        image.sprite = _hintIndicator;
-
+        var hint = Instantiate(_hintPrefab, transform);
+        
         var sequence = DOTween.Sequence();
 
-        sequence.Append(_selector.transform.DOScale(1f, 0.1f)) 
-            .Append(_selector.transform.DORotate(new Vector3(0, 0, 360f), 0.5f, RotateMode.FastBeyond360))
+        sequence.Append(hint.transform.DOScale(1f, 0.1f)) 
+            .Append(hint.transform.DORotate(new Vector3(0, 0, 360f), 0.5f, RotateMode.FastBeyond360))
             .AppendInterval(0.5f)
-            .Append(_selector.transform.DOScale(0f, 0.1f))
+            .Append(hint.transform.DOScale(0f, 0.1f))
             .OnComplete(() => {
-                image.sprite = null;
+                Destroy(hint.gameObject);
             });
-
-        return sequence;
     }
 
     

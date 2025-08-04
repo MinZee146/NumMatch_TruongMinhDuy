@@ -365,7 +365,6 @@ public class BoardController : Singleton<BoardController>
         if (DOTween.TotalPlayingTweens() > 0) return;
         
         AudioManager.Instance.PlaySfx("pop");
-        var sequence = DOTween.Sequence();
         
         for (var i = 0; i < _currentNumberedTiles; i++)
         {
@@ -383,14 +382,19 @@ public class BoardController : Singleton<BoardController>
 
                 if (tileA.CanMatch(tileB.Index, tileB.Number, false))
                 {
-                    sequence.Join(tileA.HintAnimation());
-                    sequence.Join(tileB.HintAnimation());
+                    tileA.HintAnimation();
+                    tileB.HintAnimation();
                     return;
                 }
             }
         }
         
-        sequence.Append(addTileButton.transform.DOShakePosition(0.5f, 10f));
+        var seq = DOTween.Sequence();
+        seq.Append(addTileButton.transform.DOScale(1.15f, 0.15f).SetEase(Ease.OutBack));
+        seq.Append(addTileButton.transform.DOScale(1f, 0.15f).SetEase(Ease.InBack));
+
+        var image = addTileButton.GetComponent<Image>();
+        image.DOFade(0.5f, 0.15f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine);
     }
 
     public void DebugLog()
