@@ -117,25 +117,28 @@ public class BoardController : Singleton<BoardController>
             _tileList[index].LoadData(numbersToCopy[i], index, fade: true);
             sequence.Append(_tileList[index].SpawnAnimation());
         }
-        
-        ApplyGemsToTiles(_tileList.GetRange(_currentNumberedTiles, numbersToCopy.Count), numbersToCopy);
-        
-        _currentNumberedTiles += numbersToCopy.Count;
-        _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
-        
-        CheckForGameOver();
+
+        sequence.AppendCallback(() =>
+        {
+            ApplyGemsToTiles(_tileList.GetRange(_currentNumberedTiles, numbersToCopy.Count), numbersToCopy);
+
+            _currentNumberedTiles += numbersToCopy.Count;
+            _totalRows = Mathf.CeilToInt((float)_currentNumberedTiles / Cols);
+
+            CheckForGameOver();
+        });
     }
 
     public void LoadInitialData(List<int> board)
     {
-        for (var i = 0; i < 27; i++)
+        for (var i = 0; i < board.Count; i++)
         {
             _tileList[i].LoadData(board[i], i);
         }
         
         ApplyGemsToTiles(_tileList, board);
         
-        _currentNumberedTiles = 27;
+        _currentNumberedTiles = board.Count;
         _totalRows = 3;
     }
     

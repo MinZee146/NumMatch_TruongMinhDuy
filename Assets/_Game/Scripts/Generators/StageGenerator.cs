@@ -152,6 +152,11 @@ public class StageGenerator : MonoBehaviour
         return Enumerable.Repeat(4, 27).ToList();
     }
 
+    public List<int> Test2(string input)
+    {
+        return input.Select(c => int.Parse(c.ToString())).ToList();
+    }
+
     private void Shuffle(List<int> list)
     {
         for (var i = list.Count - 1; i > 0; i--)

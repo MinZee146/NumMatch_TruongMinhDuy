@@ -128,17 +128,17 @@ public class Tile : MonoBehaviour
     {
         var seq = DOTween.Sequence();
 
-        seq.Join(ClearAnimation());
-        seq.Join(_numberText.DOColor(_normalTextColor, 0.1f).SetEase(Ease.InOutSine));
+        seq.Join(ClearAnimation(0.05f));
+        seq.Join(_numberText.DOColor(_normalTextColor, 0f));
         
         return seq;
     }
 
-    public Tween ClearAnimation()
+    public Tween ClearAnimation(float duration = 0.1f)
     {
-        return _selector.transform.DOScale(1f, 0.1f).OnComplete(() =>
+        return _selector.transform.DOScale(1f, duration).OnComplete(() =>
         {
-            _selector.transform.DOScale(0f, 0.1f);
+            _selector.transform.DOScale(0f, duration);
         });
     }
 
